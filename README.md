@@ -29,7 +29,8 @@ next start the WebSocket Proxy
 node ./rbx-websocket-proxy/node-js/index.js
 ```
 
-next either build/download [WorldQL_Server](https://github.com/WorldQL/worldql_server)
-done now you can test this. I will *probally* host this over ngrok via my raspberry pi 4b
+next either build/download [WorldQL_Server](https://github.com/WorldQL/worldql_server)<br>
+done<br>
+now you can test this. I will *probally* host this over ngrok via my raspberry pi 4b soon:tm:
 
 For more help, check out [the Rojo documentation](https://rojo.space/docs).
