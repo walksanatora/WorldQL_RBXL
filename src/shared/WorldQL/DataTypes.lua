@@ -1,11 +1,26 @@
 local DataTypes = {}
+DataTypes.Types = {}
+DataTypes.Converters = {}
 
 local Vec3T = {
     ['x'] = 0, --number
     ['y'] = 0, --number
     ['z'] = 0  --number
 }
-DataTypes.Vec3 = Vec3T
+DataTypes.Types.Vec3 = Vec3T
+
+function DataTypes.Converters.Vector3toVec3(V3)
+    local Vec3 = {
+        ['x'] = V3.X,
+        ['y'] = V3.Y,
+        ['z'] = V3.Z
+    }
+    return Vec3
+end
+function DataTypes.Converters.Vec3toVector3(v3)
+    return Vector3.new(v3.x,v3.y,v3.z)
+end
+
 
 local RecordT = {
     ['uuid'] = '',        --string
@@ -14,7 +29,7 @@ local RecordT = {
     ['data'] = '',        --string
     ['flex'] = '',        --string
 }
-DataTypes.Record = RecordT
+DataTypes.Types.Record = RecordT
 
 local MessageT = {
     ['instruction'] = 0,  --enum.Instruction
@@ -27,7 +42,7 @@ local MessageT = {
     ['position'] = Vec3T, --Vec3
     ['flex'] = ''         --string
 }
-DataTypes.Message = MessageT
+DataTypes.Types.Message = MessageT
 
 local EntityT = {
     ['uuid'] = '',        --string
@@ -36,7 +51,7 @@ local EntityT = {
     ['data'] = '',        --string
     ['flex'] = ''         --string
 }
-DataTypes.Entity = EntityT
+DataTypes.Types.Entity = EntityT
 
 DataTypes.Enum = {}
 local Instruction = {
