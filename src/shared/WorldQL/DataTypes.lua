@@ -40,14 +40,14 @@ export type EntityT = {
 
 export type MessageT = {
     instruction: number, --DataTypes.Enum.Instruction
-    parameter: string,
-    senderUUID: string,
+    parameter: string?,
+    senderUUID: string?,
     worldName: string,
-    replication: number, --DataTypes.Enum.Replication
-    records: { [number] : RecordT },
-    entities: { [number] : EntityT },
-    position: Vec3T,
-    flex: string,
+    replication: number?, --DataTypes.Enum.Replication
+    records: { [number] : RecordT }?,
+    entities: { [number] : EntityT }?,
+    position: Vec3T?,
+    flex: string?,
 }
 --#endregion
 
