@@ -2,18 +2,17 @@ local DataTypes = {}
 DataTypes.Types = {}
 DataTypes.Converters = {}
 
-local Vec3T = {
-    ['x'] = 0, --number
-    ['y'] = 0, --number
-    ['z'] = 0  --number
+export type Vec3T = {
+    x: number,
+    y: number,
+    z: number
 }
-DataTypes.Types.Vec3 = Vec3T
 
 function DataTypes.Converters.Vector3toVec3(V3)
-    local Vec3 = {
-        ['x'] = V3.X,
-        ['y'] = V3.Y,
-        ['z'] = V3.Z
+    local Vec3: Vec3T = {
+        x=V3.X,
+        y=V3.Y,
+        z=V3.Z
     }
     return Vec3
 end
@@ -22,36 +21,33 @@ function DataTypes.Converters.Vec3toVector3(v3)
 end
 
 
-local RecordT = {
-    ['uuid'] = '',        --string
-    ['position'] = Vec3T, --Vec3
-    ['worldName'] = '',   --string
-    ['data'] = '',        --string
-    ['flex'] = '',        --string
+export type RecordT = {
+    uuid: string,
+    position: Vec3T,
+    worldName: string,
+    data: string,
+    flex: string
 }
-DataTypes.Types.Record = RecordT
 
-local MessageT = {
-    ['instruction'] = 0,  --enum.Instruction
-    ['parameter'] = '',   --string
-    ['senderUUID'] = '',  --string
-    ['worldName'] = '',   --string
-    ['replication'] = 0,  --enum.Replication
-    ['records'] = {},     --table[RecordT]
-    ['entities'] = {},    --table[EntityT]
-    ['position'] = Vec3T, --Vec3
-    ['flex'] = ''         --string
+export type EntityT = {
+    uuid: string,
+    position: Vec3T,
+    worldName: string,
+    data: string,
+    flex: string
 }
-DataTypes.Types.Message = MessageT
 
-local EntityT = {
-    ['uuid'] = '',        --string
-    ['position'] = Vec3T, --Vec3
-    ['worldName'] = '',   --string
-    ['data'] = '',        --string
-    ['flex'] = ''         --string
+export type MessageT = {
+    instruction: number, --DataTypes.Enum.Instruction
+    parameter: string,
+    senderUUID: string,
+    worldName: string,
+    replication: number, --DataTypes.Enum.Replication
+    records: { [number] : RecordT },
+    entities: { [number] : EntityT },
+    position: Vec3T,
+    flex: string,
 }
-DataTypes.Types.Entity = EntityT
 
 DataTypes.Enum = {}
 local Instruction = {
