@@ -1,13 +1,14 @@
 local DataTypes = {}
-DataTypes.Types = {}
 DataTypes.Converters = {}
 
+--#region Type Defs
 export type Vec3T = {
     x: number,
     y: number,
     z: number
 }
 
+--#region to/from Vec3T converters
 function DataTypes.Converters.Vector3toVec3(V3)
     local Vec3: Vec3T = {
         x=V3.X,
@@ -19,7 +20,7 @@ end
 function DataTypes.Converters.Vec3toVector3(v3)
     return Vector3.new(v3.x,v3.y,v3.z)
 end
-
+--#endregion
 
 export type RecordT = {
     uuid: string,
@@ -48,6 +49,7 @@ export type MessageT = {
     position: Vec3T,
     flex: string,
 }
+--#endregion
 
 DataTypes.Enum = {}
 local Instruction = {

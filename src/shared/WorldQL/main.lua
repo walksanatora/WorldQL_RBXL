@@ -1,8 +1,8 @@
 local WQL = {} --create api table
 local httpService = game:GetService('HttpService')
+local DataTypes = require(script.Parent.DataTypes)
 
-
-local function getTableKeys(table)
+local function getTableKeys(table:table)
     local keyset = {}
     for k,v in pairs(table) do
         keyset[#keyset + 1] = k
@@ -10,7 +10,7 @@ local function getTableKeys(table)
     return keyset
 end
 
-local function tableContains(table,value)
+local function tableContains(table: table,value: any):boolean
     for k, v in pairs(table) do
         if v == value then
             return true
@@ -19,12 +19,11 @@ local function tableContains(table,value)
     return false
 end
 
-function WQL.createNew(URL,autoConnect,listenTimer)
+function WQL.createNew(URL:string,listenTimer:number|nil)
     --#region local values
     local ret = {}
     local options = {
         ['URL'] = URL,
-        ['autoConnect'] = autoConnect or false,
         ['listenTimer'] = listenTimer or 1
     }
     local Event_on = {
@@ -47,14 +46,14 @@ function WQL.createNew(URL,autoConnect,listenTimer)
         ['disconect'] = {},
         ['recordReply'] = {}
     }
-    local UUID = httpService:GenerateGUID(false)
-    local WSAPI =  require(game:GetService('ReplicatedStorage').websockets_lib.WebSocket)
+    local UUID: string = httpService:GenerateGUID(false)
+    local WSAPI: table = require(game:GetService('ReplicatedStorage').websockets_lib.WebSocket)
     WSAPI.Setup('127.0.0.1','2030',"WorlqlRbxlxNodeBridge")
     
     --#endregion
 
     --#region local util functions
-    local function fireEvent(event,args)
+    local function fireEvent(event:string,args:{[number] : any})
         local k = getTableKeys(Event_on)
         local k2 = getTableKeys(Event_once)
         if tableContains(k,event) then
@@ -72,7 +71,7 @@ function WQL.createNew(URL,autoConnect,listenTimer)
     --#endregion
 
     --#region WorldQL Functions
-    function ret.on(event,cb)
+    function ret.on(event: string,cb: function)
         local k = getTableKeys(Event_on)
         if tableContains(k,event) then
             table.insert(Event_on[event],cb)
@@ -81,7 +80,7 @@ function WQL.createNew(URL,autoConnect,listenTimer)
         end
     end
 
-    function ret.once(event,cb)
+    function ret.once(event: string,cb: function)
         local k = getTableKeys(Event_on)
         if tableContains(k,event) then
             table.insert(Event_on[event],cb)
@@ -103,14 +102,16 @@ function WQL.createNew(URL,autoConnect,listenTimer)
         WSAPI.StartListen(options.listenTimer)
     end
 
-    function ret.disconnect()
-        WSAPI.disconect()
+    function ret.disconnect(): boolean
+        return WSAPI.disconect()
     end
 
-    function ret.sendRawMessage(message)
+    function ret.sendRawMessage(message: DataTypes.MessageT):boolean | nil
         if not WSAPI.IsConnected() then
             error('cannot send messages before client is connected')
         end
+        local serilizedMessage = httpService.JSONEncode(message)
+        return WSAPI.Send(serilizedMessage)
     end
 
     --#endregion
