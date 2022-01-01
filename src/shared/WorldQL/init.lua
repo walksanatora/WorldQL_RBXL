@@ -49,7 +49,7 @@ function WQL.createNew(URL:string,listenTimer:number|nil)
     }
     local UUID: string = httpService:GenerateGUID(false)
     local WSAPI: table = require(script.WebSocket)
-    WSAPI.Setup('127.0.0.1','2030',"WorlqlRbxlxNodeBridge")
+    WSAPI.Setup('furry-act.auto.playit.gg','41075')
     
     --#endregion
     --#region local util functions
@@ -70,7 +70,8 @@ function WQL.createNew(URL:string,listenTimer:number|nil)
     end
     --#endregion
     --#region WorldQL Functions
-    function ret.on(event: string,cb: function)
+    function ret.on(event: string,cb)
+        if typeof(cb) ~="function" then error('cb must be a function') end
         local k = getTableKeys(Event_on)
         if tableContains(k,event) then
             table.insert(Event_on[event],cb)
@@ -79,7 +80,8 @@ function WQL.createNew(URL:string,listenTimer:number|nil)
         end
     end
 
-    function ret.once(event: string,cb: function)
+    function ret.once(event: string,cb)
+        if typeof(cb) ~="function" then error('cb must be a function') end
         local k = getTableKeys(Event_on)
         if tableContains(k,event) then
             table.insert(Event_on[event],cb)
