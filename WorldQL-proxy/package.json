@@ -1,8 +1,9 @@
 {
   "name": "worldql-proxy",
+  "type": "module",
   "version": "1.0.0",
   "description": "a proxy between WorldQL flatbuffers and Roblox JSON",
-  "main": "index.js",
+  "exports": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -14,6 +15,7 @@
   "license": "ISC",
   "dependencies": {
     "@worldql/client": "^0.1.0",
+    "crypto": "^1.0.1",
     "express": "^4.17.2",
     "flatbuffers": "^2.0.4",
     "JSON": "^1.0.0",

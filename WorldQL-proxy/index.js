@@ -81,7 +81,6 @@ app.post('/WorldQL/Auth',(req,res)=>{
             )
             addMessageToUnread(WqlClient.uuid,MsgT)
         })
-        WqlClient.on('')
     })
 })
 
@@ -108,6 +107,36 @@ app.delete('/WorldQL/Auth',(req,res)=>{
     }else{
         res.send({
             'failed': true,
+            'message': 'invalid server key'
+        })
+    }
+})
+
+/*
+Gets a Message
+-> {key:string,limit?:number(1)}
+<- Array<MessageT>
+*/
+app.get('/WorldQL/Message',(req,res)=>{
+    if (req.header.key in Object.keys(Clients)){
+        var Wql = Clients[req.header.key]
+        var uuid = Wql.uuid
+        if ((UnreadMessages[uuid] == undefined)||(UnreadMessages[uuid] == [])){res.send({
+            'failed': true,
+            'message': 'no messages to be recieved'
+        })}
+        var output = []
+        for (i=0;index<req.header.limit || 1;i++){
+            output.push(UnreadMessages[uuid].shift())
+        }
+        res.send({
+            'failed': false,
+            'message': `${req.header.limit || 1} message(s) recieved`,
+            'output': output
+        })
+    }else{
+        res.send({
+            'failed':true,
             'message': 'invalid server key'
         })
     }
