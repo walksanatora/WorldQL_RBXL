@@ -1,12 +1,23 @@
+async function main(){
+
 const WebSocket = require('ws')
 const express = require('express')
 const flatbuffers = require('flatbuffers')
 const json = require('JSON')
 
+const REPL = require('repl')
+
 print = console.log
 
-const wqlfb = require('./WQLFB.js').WorldqlFb
-const flatBuilder = new flatbuffers.Builder(1024)
+const wql = await import('@worldql/client')
+const wqlClient = new wql.Client({
+    'url': 'ws://10.0.0.148:8080',
+    'autoconnect': false
+})
+
+REPL.context.wql = wql
+REPL.context.wqlClient = wqlClient
+REPL.start('> ')
 
 const app = express()
 const port = process.env.PORT || 2030
@@ -40,3 +51,7 @@ app.get('/WorldQL',(req,res)=>{
 app.listen(port, () => {
     console.log('Server started on: ' + port);
 });
+
+}
+console.log(typeof(main))
+main()
