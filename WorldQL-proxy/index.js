@@ -161,7 +161,7 @@ app.post('/WorldQL/Message',(req,res)=>{
             'message': 'missing message data'
         });return}
         var Wql = Clients[req.headers.key]
-        let msg = JSON.parse(req.headers.message)
+        let msg = JSON.parse(req.body)
         Wql.sendRawMessage(msg,msg.replication)
         res.send({
             'failed':false,
