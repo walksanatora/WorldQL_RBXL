@@ -77,7 +77,7 @@ key: ${key}`)
             key
         ]})
         WqlClient.on('rawMessage',(message)=>{
-            addMessageToUnread(message)
+            addMessageToUnread(WqlClient.uuid,message)
         })
     })
     WqlClient.connect()
