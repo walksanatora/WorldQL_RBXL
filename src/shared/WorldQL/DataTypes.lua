@@ -49,6 +49,14 @@ export type MessageT = {
     position: Vec3T?,
     flex: string?,
 }
+
+export type MessagePayload = {
+    parameter: string?,
+    flex: string?,
+    records: { [number] : RecordT }?,
+    entities: { [number] : EntityT }?,
+}
+
 --#endregion
 
 DataTypes.Enum = {}
