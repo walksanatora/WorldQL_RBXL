@@ -170,6 +170,8 @@ app.post('/WorldQL/Message',(req,res)=>{
         }
         var Wql = Clients[req.headers.key]
         var msg = req.body
+        console.log(`sending message from ${Wql.uuid}`)
+        console.log(msg)
         msg.flex = new TextEncoder().encode(msg.flex)
         Wql.sendRawMessage(msg,msg.replication)
         res.send({
