@@ -225,8 +225,6 @@ Pings to keep you alive *and* gives you the ammount of messages
 */
 app.get('/WorldQL/Ping',(req,res)=>{
     if (Object.keys(Clients).indexOf(req.headers.key) != -1){
-        console.log(Object.keys(Clients).indexOf(req.headers.key))
-        console.log(Object.keys(Clients))
         updateLastSeen(req.headers.key)
         var Wqlc = Clients[req.headers.key]
         var uuid = Wqlc.uuid
