@@ -156,10 +156,14 @@ Sends A message to WorldQL
 */
 app.post('/WorldQL/Message',(req,res)=>{
     if (Object.keys(Clients).indexOf(req.headers.key) != -1){
-        if (req.body == undefined){res.send({
-            'failed':true,
-            'message': 'missing message data'
-        });return}
+        if (req.body == undefined){
+            console.log(`${req.headers.key} just forgot to send a request body`)
+            res.send({
+                'failed':true,
+                'message': 'missing message data'
+            })
+            return
+        }
         var Wql = Clients[req.headers.key]
         let msg = JSON.parse(req.body)
         Wql.sendRawMessage(msg,msg.replication)
