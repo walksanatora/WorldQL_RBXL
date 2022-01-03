@@ -32,13 +32,12 @@ function WQL.createNew(URL:string,listenTimer:number|nil)
         ['listenTimer'] = listenTimer or 1
     }
     local Event_on = {
-        ['ready'] = {},
+        ['ready'] = {}, --implemented
         ['peerConnect'] = {},
         ['peerDisconnect'] = {},
         ['globalMessage'] = {},
         ['localMessage'] = {},
-        ['rawMessage'] = {},
-        ['disconect'] = {},
+        ['disconect'] = {}, --implemented
         ['recordReply'] = {}
     }
     local Event_once = {
@@ -47,7 +46,6 @@ function WQL.createNew(URL:string,listenTimer:number|nil)
         ['peerDisconnect'] = {},
         ['globalMessage'] = {},
         ['localMessage'] = {},
-        ['rawMessage'] = {},
         ['disconect'] = {},
         ['recordReply'] = {}
     }
@@ -93,15 +91,14 @@ function WQL.createNew(URL:string,listenTimer:number|nil)
 
     function ret.connect()
         local data = httpService:RequestAsync({
-            options.URL .. '/WorldQL/Ping',
-            'GET'
+            options.URL .. '/WorldQL/Auth',
+            'POST'
         })
         local dataT = httpService:JSONDecode(data)
         if dataT.failed then
             error(dataT.message)
         end
-        WQLAPIKEY = dataT.output[1]
-        print(WQLAPIKEY)
+        WQLAPIKEY = dataT.output[1
         task.spawn(function()
             while task.wait(options.listenTimer) do
                 local output = httpService:JSONDecode(httpService:RequestAsync({
@@ -115,7 +112,19 @@ function WQL.createNew(URL:string,listenTimer:number|nil)
                 UnreadMessages = output.output.messages
             end
         end)
+        fireEvent('ready')
     end
+
+    function ret.disconnect()
+        local out = httpService:JSONDecode(httpService:RequestAsync({
+            options.URL .. '/WorldQL/Auth',
+            'DELETE',
+            {['key'] = WQLAPIKEY}
+        }))
+        if out.failed then error(out.message) end
+        fireEvent('disconnect')
+    end
+
     --#endregion
     return ret
 end
