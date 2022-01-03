@@ -57,6 +57,7 @@ function WQL.createNew(URL:string,listenTimer:number|nil,listenGETLimit:number|n
     local function fireEvent(event:string,args:{[number] : any})
         local k = getTableKeys(Event_on)
         local k2 = getTableKeys(Event_once)
+        --print('firing event:',event,'with args:',args)
         if tableContains(k,event) then
             for key, value in pairs(Event_on[event]) do
                 value(unpack(args or {}))
@@ -126,11 +127,11 @@ function WQL.createNew(URL:string,listenTimer:number|nil,listenGETLimit:number|n
                     }).Body)
                     for key, value in pairs(messages.output) do
                         if value.instruction == DataTypes.Enum.Instruction.GlobalMessage then
-                            fireEvent('globalMessage',value)
+                            fireEvent('globalMessage',{value})
                         elseif value.instruction == DataTypes.Enum.Instruction.LocalMessage then
-                            fireEvent('localMessage',value)
+                            fireEvent('localMessage',{value})
                         end
-                        fireEvent('rawMessage',value)
+                        fireEvent('rawMessage',{value})
                     end
                 end
             end
