@@ -13,3 +13,5 @@ wqlc.on('ready',()=>{
         'flex string'
     ))
 })
+
+wqlc.connect()
