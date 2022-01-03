@@ -187,7 +187,6 @@ function WQL.createNew(URL:string,listenTimer:number|nil,listenGETLimit:number|n
             ['entities'] = payload.entities,
         })
     end
-
     function ret.recordCreate(worldName:string, records: { [number] : DataTypes.RecordT })
         return ret.sendRawMessage({
             ['instruction'] = DataTypes.Enum.Instruction.RecordCreate,
@@ -195,7 +194,6 @@ function WQL.createNew(URL:string,listenTimer:number|nil,listenGETLimit:number|n
             ['records'] = records
         })
     end
-
     function ret.recordDelete(worldName:string, records: { [number] : DataTypes.RecordT })
         return ret.sendRawMessage({
             ['instruction'] = DataTypes.Enum.Instruction.RecordDelete,
@@ -203,10 +201,23 @@ function WQL.createNew(URL:string,listenTimer:number|nil,listenGETLimit:number|n
             ['records'] = records
         })
     end
-
     function ret.recordRead(worldName:string,position:DataTypes.Vec3T)
         return ret.sendRawMessage({
             ['instruction'] = DataTypes.Enum.Instruction.RecordRead,
+            ['worldName'] = worldName,
+            ['position'] = position
+        })
+    end
+    function ret.areaSubscribe(worldName:string,position:DataTypes.Vec3T)
+        return ret.sendRawMessage({
+            ['instruction'] = DataTypes.Enum.Instruction.AreaSubscribe,
+            ['worldName'] = worldName,
+            ['position'] = position
+        })
+    end
+    function ret.areaUnsubscribe(worldName:string,position:DataTypes.Vec3T)
+        return ret.sendRawMessage({
+            ['instruction'] = DataTypes.Enum.Instruction.AreaUnsubscribe,
             ['worldName'] = worldName,
             ['position'] = position
         })
