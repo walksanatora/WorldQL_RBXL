@@ -57,7 +57,7 @@ function WQL.createNew(URL:string,listenTimer:number|nil)
         local k2 = getTableKeys(Event_once)
         if tableContains(k,event) then
             for key, value in pairs(Event_on[event]) do
-                value(unpack(args))
+                value(unpack(args or {}))
             end
         end
         if tableContains(k2,event) then
@@ -90,11 +90,11 @@ function WQL.createNew(URL:string,listenTimer:number|nil)
     end
 
     function ret.connect()
-        local data = httpService:RequestAsync({
-            options.URL .. '/WorldQL/Auth',
-            'POST'
+        local data = httpService:RequestAsync({ --error here
+            ['Url'] = options.URL .. '/WorldQL/Auth',
+            ['Method'] = 'POST'
         })
-        local dataT = httpService:JSONDecode(data)
+        local dataT = httpService:JSONDecode(data.Body)
         if dataT.failed then
             error(dataT.message)
         end
@@ -102,10 +102,10 @@ function WQL.createNew(URL:string,listenTimer:number|nil)
         task.spawn(function()
             while task.wait(options.listenTimer) do
                 local output = httpService:JSONDecode(httpService:RequestAsync({
-                    options.URL .. '/WorldQL/Ping',
-                    'GET',
-                    {['key'] =  WQLAPIKEY},
-                }))
+                    ['Url'] = options.URL .. '/WorldQL/Ping',
+                    ['Method'] ='GET',
+                    ['Headers'] = {['key'] =  WQLAPIKEY},
+                }).Body)
                 if output.failed then
                     error(output.message)
                 end
@@ -117,10 +117,10 @@ function WQL.createNew(URL:string,listenTimer:number|nil)
 
     function ret.disconnect()
         local out = httpService:JSONDecode(httpService:RequestAsync({
-            options.URL .. '/WorldQL/Auth',
-            'DELETE',
-            {['key'] = WQLAPIKEY}
-        }))
+            ['Url'] = options.URL .. '/WorldQL/Auth',
+            ['Method'] = 'DELETE',
+            ['Headers'] = {['key'] = WQLAPIKEY}
+        }).Body)
         if out.failed then error(out.message) end
         fireEvent('disconnect')
     end

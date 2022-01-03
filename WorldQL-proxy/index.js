@@ -226,7 +226,7 @@ app.get('/WorldQL/Ping',(req,res)=>{
             'failed':false,
             'message': 'updated last seen time',
             'output': {
-                'messages': UnreadMessages[Wql.uuid].length ?? 0
+                'messages': UnreadMessages[Clients[req.headers.key].uuid].length ?? 0
             }
         })
     }else{
