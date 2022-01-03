@@ -77,7 +77,7 @@ key: ${key}`)
             key
         ]})
         WqlClient.on('rawMessage',(message)=>{
-            let copy = json.parse(json.stringify(message))
+            let copy = JSON.parse(JSON.stringify(message))
             copy.flex = new TextDecoder().decode(copy.flex)
             addMessageToUnread(WqlClient.uuid,copy)
         })
