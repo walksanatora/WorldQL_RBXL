@@ -37,7 +37,7 @@ function WQL.createNew(URL:string,listenTimer:number|nil)
         ['peerDisconnect'] = {},
         ['globalMessage'] = {},
         ['localMessage'] = {},
-        ['disconect'] = {}, --implemented
+        ['disconnect'] = {}, --implemented
         ['recordReply'] = {}
     }
     local Event_once = {
@@ -46,7 +46,7 @@ function WQL.createNew(URL:string,listenTimer:number|nil)
         ['peerDisconnect'] = {},
         ['globalMessage'] = {},
         ['localMessage'] = {},
-        ['disconect'] = {},
+        ['disconnect'] = {},
         ['recordReply'] = {}
     }
     
