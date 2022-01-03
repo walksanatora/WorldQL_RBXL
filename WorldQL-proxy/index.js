@@ -222,13 +222,6 @@ app.get('/WorldQL/Ping',(req,res)=>{
     }
 })
 
-
-//records
-// POST - recordCreate
-// GET - recordRead
-// DELETE - recordDelete
-LoggingClient.recordCreate()
-
 setInterval(()=>{
     var object = LastSeen
     for (const key in object) {

@@ -17,6 +17,7 @@ client.on('ready',function()
             })
         end
     end)
+    print('chat event connected')
 end)
 client.on('disconnect',function()
     print('the client disconnected boo-hoo')
