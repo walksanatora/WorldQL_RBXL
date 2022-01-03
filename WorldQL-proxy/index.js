@@ -178,6 +178,7 @@ app.get('/WorldQL/Ping',(req,res)=>{
         var Wqlc = Clients[req.headers.key]
         var uuid = Wqlc.uuid
         if (UnreadMessages[uuid] == undefined){UnreadMessages[uuid] = []}
+        console.log(`${req.header.key} has ${UnreadMessages[uuid].length} UnreadMessages`)
         res.send({
             'failed':false,
             'message': 'updated last seen time',
