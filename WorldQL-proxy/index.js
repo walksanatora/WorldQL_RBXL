@@ -159,6 +159,7 @@ app.post('/WorldQL/Message',(req,res)=>{
     if (Object.keys(Clients).indexOf(req.headers.key) != -1){
         if (req.body == undefined){
             console.log(`${req.headers.key} just forgot to send a request body`)
+            console.log(req.body)
             console.log(req)
             res.send({
                 'failed':true,
