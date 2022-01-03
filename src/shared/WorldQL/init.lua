@@ -98,7 +98,7 @@ function WQL.createNew(URL:string,listenTimer:number|nil)
         if dataT.failed then
             error(dataT.message)
         end
-        WQLAPIKEY = dataT.output[1]
+        WQLAPIKEY = dataT.output[2]
         task.spawn(function()
             while task.wait(options.listenTimer) do
                 local output = httpService:JSONDecode(httpService:RequestAsync({

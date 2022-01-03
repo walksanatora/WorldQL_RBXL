@@ -101,13 +101,13 @@ app.delete('/WorldQL/Auth',(req,res)=>{
     if (Object.keys(Clients).indexOf(req.headers.key) != -1){
         var WQLC = Clients[req.headers.key]
         console.log(`Disconnecting Client
-        UUID: ${WQLC.uuid}
-        key: ${req.headers.key}`)
-        UnreadMessages[WQLC.uuid] = undefined
+UUID: ${WQLC.uuid}
+key: ${req.headers.key}`)
+        delete UnreadMessages[WQLC.uuid]
         WQLC.disconnect()
         WQLC.removeAllListeners()
-        Clients[req.headers.key] = undefined
-        LastSeen[req.headers.key] = undefined
+        delete Clients[req.headers.key]
+        delete LastSeen[req.headers.key]
         res.send({
             'failed':false,
             'message': 'deleted WorlQL client',
@@ -144,6 +144,9 @@ app.get('/WorldQL/Message',(req,res)=>{
             'output': UnreadMessages[uuid].splice(0, req.headers.limit)
         })
     }else{
+        console.log(`${req.ip} tried to use server key "${req.headers.key}" and failed`)
+        console.log(`current Keys are:`)
+        console.log(Object.keys(Clients))
         res.send({
             'failed':true,
             'message': 'invalid server key'
@@ -201,6 +204,9 @@ app.post('/WorldQL/Message',(req,res)=>{
             })
         }
     }else{
+        console.log(`${req.ip} tried to use server key "${req.headers.key}" and failed`)
+        console.log(`current Keys are:`)
+        console.log(Object.keys(Clients))
         res.send({
             'failed':true,
             'message': 'invalid server key'
@@ -233,6 +239,9 @@ app.get('/WorldQL/Ping',(req,res)=>{
             }
         })
     }else{
+        console.log(`${req.ip} tried to use server key "${req.headers.key}" and failed`)
+        console.log(`current Keys are:`)
+        console.log(Object.keys(Clients))
         res.send({
             'failed':true,
             'message': 'invalid server key'
@@ -251,11 +260,11 @@ setInterval(()=>{
                 console.log(`Disconnecting Client
 UUID: ${WQLC.uuid}
 key: ${key}`)
-                UnreadMessages[WQLC.uuid] = undefined
+                delete UnreadMessages[WQLC.uuid]
                 WQLC.disconnect()
                 WQLC.removeAllListeners()
-                Clients[key] = undefined
-                LastSeen[key] = undefined
+                delete Clients[key]
+                delete LastSeen[key]
             }
         }
     }
