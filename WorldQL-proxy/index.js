@@ -15,6 +15,7 @@ function addMessageToUnread(uuid,Message){
     UnreadMessages[uuid].push(Message)
 }
 function updateLastSeen(key){
+    console.log(`updating last seen time for: ${key}`)
     LastSeen[key] = Date.now()
 }
 
@@ -173,6 +174,7 @@ app.post('/WorldQL/Message',(req,res)=>{
         var Wql = Clients[req.headers.key]
         req.headers.global ??= true;
         if (req.headers.global){
+            updateLastSeen(req.headers.key)
             Wql.GlobalMessage(
                 req.headers.worldName,
                 req.headers.replication ?? wql.Replication.ExceptSelf,
@@ -184,6 +186,7 @@ app.post('/WorldQL/Message',(req,res)=>{
                 'output': []
             })
         }else{
+            updateLastSeen(req.headers.key)
             Wql.LocalMessage(
                 req.headers.worldName,
                 req.headers.position,
@@ -204,8 +207,41 @@ app.post('/WorldQL/Message',(req,res)=>{
     }
 })
 
+app.get('/WorldQL/Ping',(req,res)=>{
+    if (Object.keys(Clients).indexOf(req.headers.key) != -1){
+        updateLastSeen(req.headers.key)
+        res.send({
+            'failed':false,
+            'message': 'updated last seen time'
+        })
+    }else{
+        res.send({
+            'failed':true,
+            'message': 'invalid server key'
+        })
+    }
+})
 
-
+setInterval(()=>{
+    var object = LastSeen
+    for (const key in object) {
+        if (Object.hasOwnProperty.call(object, key)) {
+            const element = object[key]
+            var ourTime = Date.now()
+            if ((ourTime - element) >= 20000){
+                var WQLC = Clients[key]
+                console.log(`Disconnecting Client
+UUID: ${WQLC.uuid}
+key: ${key}`)
+                UnreadMessages[WQLC.uuid] = undefined
+                WQLC.disconnect()
+                WQLC.removeAllListeners()
+                Clients[key] = undefined
+                LastSeen[key] = undefined
+            }
+        }
+    }
+},2000)
 app.listen(port, () => {
     console.log('Server started on: ' + port);
 });
