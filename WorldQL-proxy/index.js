@@ -156,7 +156,7 @@ Sends A message to WorldQL
 */
 app.post('/WorldQL/Message',(req,res)=>{
     if (Object.keys(Clients).indexOf(req.headers.key) != -1){
-        if (req.headers.message == undefined){res.send({
+        if (req.body == undefined){res.send({
             'failed':true,
             'message': 'missing message data'
         });return}
