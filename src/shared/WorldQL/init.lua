@@ -121,7 +121,7 @@ function WQL.createNew(URL:string,listenTimer:number|nil,listenGETLimit:number|n
                         ['Method'] = 'GET',
                         ['Headers'] = {
                             ['key'] =  WQLAPIKEY,
-                            ['limit'] = options.listenGETLimit
+                            ['limit'] = tostring(options.listenGETLimit)
                         }
                     }).Body)
                     for key, value in pairs(messages.output) do
