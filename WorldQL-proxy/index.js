@@ -60,33 +60,8 @@ key: ${key}`)
             WqlClient.uuid,
             key
         ]})
-        WqlClient.on('globalMessage',(senderUUID,worldName,MessagePayload)=>{
-            var MsgT = new MessageT(
-                wql.Instruction.GlobalMessage,
-                MessagePayload.parameter,
-                senderUUID,
-                worldName,
-                null,
-                MessagePayload.records,
-                MessagePayload.entities,
-                null,
-                MessagePayload.flex
-            )
-            addMessageToUnread(WqlClient.uuid,MsgT)
-        })
-        WqlClient.on('localMessage',(senderUUID,worldName,position,MessagePayload)=>{
-            var MsgT = new MessageT(
-                wql.Instruction.LocalMessage,
-                MessagePayload.parameter,
-                senderUUID,
-                worldName,
-                null,
-                MessagePayload.records,
-                MessagePayload.entities,
-                position,
-                MessagePayload.flex
-            )
-            addMessageToUnread(WqlClient.uuid,MsgT)
+        WqlClient.on('rawMessage',(message)=>{
+            addMessageToUnread(message)
         })
     })
     WqlClient.connect()
