@@ -14,8 +14,3 @@ client.on('rawMessage',function(message)
     print(message)
 end)
 client.connect()
-for i = 0, 30, 1 do
-    print('waiting '..i..'/30')
-    wait(1)
-end
-client.disconnect()

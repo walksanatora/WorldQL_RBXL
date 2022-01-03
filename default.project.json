@@ -3,6 +3,12 @@
   "tree": {
     "$className": "DataModel",
 
+    "HttpService":{
+      "$properties": {
+        "HttpEnabled": true
+      }
+    },
+
     "ReplicatedStorage": {
       "Common": {
         "$path": "src/shared"

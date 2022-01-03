@@ -1,7 +1,7 @@
 import express from "express"
 import * as wql from '@worldql/client'
 import * as crypto from 'node:crypto'
-import * as JSON from 'node:JSON'
+import * as JSON from 'JSON'
 
 const app = express()
 const port = process.env.PORT || 2030
