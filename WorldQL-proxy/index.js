@@ -27,7 +27,7 @@ const UnreadMessages = {}
 const LastSeen = {}
 
 function addMessageToUnread(uuid,Message){
-    console.log(`adding message to uuid: ${uuid}`)
+//    console.log(`adding message to uuid: ${uuid}`)
     if (UnreadMessages[uuid] == undefined){UnreadMessages[uuid] = []}
     UnreadMessages[uuid].push(Message)
 }
@@ -56,13 +56,13 @@ Generates a new Auth key and uuid pair
 <- [UUID,Key]
 */
 app.post('/WorldQL/Auth',(req,res)=>{
-    console.log('creating client')
+    //console.log('creating client')
     const WqlClient = new wql.Client({
         url: WQLWebsocket,
         autoconnect: false
     })
     var key = crypto.randomBytes(Math.ceil(36 / 2)).toString('hex').slice(0, 36)
-    console.log('key generated')
+    //console.log('key generated')
     WqlClient.on('ready',()=>{
         console.log(`Created New Client
 UUID: ${WqlClient.uuid}
@@ -194,7 +194,7 @@ app.get('/WorldQL/Ping',(req,res)=>{
         var Wqlc = Clients[req.headers.key]
         var uuid = Wqlc.uuid
         if (UnreadMessages[uuid] == undefined){UnreadMessages[uuid] = []}
-        console.log(`${req.headers.key} has ${UnreadMessages[uuid].length} UnreadMessages`)
+        //console.log(`${req.headers.key} has ${UnreadMessages[uuid].length} UnreadMessages`)
         res.send({
             'failed':false,
             'message': 'updated last seen time',
