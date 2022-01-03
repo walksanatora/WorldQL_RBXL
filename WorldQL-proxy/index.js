@@ -4,10 +4,7 @@ import * as crypto from 'node:crypto'
 import * as JSON from 'JSON'
 
 const app = express.express()
-app.use((req,res,next)=>{
-    console.log(req)
-    next()
-})
+app.use(express.json())
 const port = process.env.PORT || 2030
 const WQLWebsocket = process.env['WQL_WEBSOCKET'] || 'ws://10.0.0.148:8080'
 
@@ -162,6 +159,7 @@ app.post('/WorldQL/Message',(req,res)=>{
     if (Object.keys(Clients).indexOf(req.headers.key) != -1){
         if (req.body == undefined){
             console.log(`${req.headers.key} just forgot to send a request body`)
+            console.log(req)
             res.send({
                 'failed':true,
                 'message': 'missing message data'
