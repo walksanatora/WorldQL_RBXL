@@ -24,6 +24,7 @@ function WQL.createNew(URL:string,listenTimer:number|nil)
     local ret = {}
     local WQLAPIKEY = ''
     local UnreadMessages = 0
+    local Connected = false
     if listenTimer > 20 then
         error('listenTimer must be less then 20 seconds')
     end
@@ -99,8 +100,12 @@ function WQL.createNew(URL:string,listenTimer:number|nil)
             error(dataT.message)
         end
         WQLAPIKEY = dataT.output[2]
+        Connected = true
         task.spawn(function()
             while task.wait(options.listenTimer) do
+                if not Connected then
+                    break
+                end
                 local output = httpService:JSONDecode(httpService:RequestAsync({
                     ['Url'] = options.URL .. '/WorldQL/Ping',
                     ['Method'] ='GET',
@@ -122,6 +127,7 @@ function WQL.createNew(URL:string,listenTimer:number|nil)
             ['Headers'] = {['key'] = WQLAPIKEY}
         }).Body)
         if out.failed then error(out.message) end
+        Connected = false
         fireEvent('disconnect')
     end
 
