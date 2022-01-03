@@ -77,7 +77,9 @@ key: ${key}`)
             key
         ]})
         WqlClient.on('rawMessage',(message)=>{
-            addMessageToUnread(WqlClient.uuid,message)
+            let copy = json.parse(json.stringify(message))
+            copy.flex = new TextDecoder().decode(copy.flex)
+            addMessageToUnread(WqlClient.uuid,copy)
         })
     })
     WqlClient.connect()
@@ -168,6 +170,7 @@ app.post('/WorldQL/Message',(req,res)=>{
         }
         var Wql = Clients[req.headers.key]
         var msg = req.body
+        msg.flex = new TextEncoder().encode(msg.flex)
         Wql.sendRawMessage(msg,msg.replication)
         res.send({
             'failed':false,
