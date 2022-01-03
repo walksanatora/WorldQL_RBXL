@@ -43,7 +43,7 @@ export type MessageT = {
     parameter: string?,
     senderUUID: string?,
     worldName: string,
-    replication: number?, --DataTypes.Enum.Replication
+    replication: number, --DataTypes.Enum.Replication
     records: { [number] : RecordT }?,
     entities: { [number] : EntityT }?,
     position: Vec3T?,

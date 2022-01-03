@@ -1,7 +1,7 @@
 import express from "express"
 import * as wql from '@worldql/client'
 import * as crypto from 'node:crypto'
-import MessageT from './Wql_objects.js'
+import * as JSON from 'node:JSON'
 
 const app = express()
 const port = process.env.PORT || 2030
@@ -115,8 +115,8 @@ app.get('/WorldQL/Message',(req,res)=>{
         updateLastSeen(req.headers.key)
         res.send({
             'failed': false,
-            'message': `${req.headers.limit || 1} message(s) recieved`,
-            'output': UnreadMessages[uuid].splice(0, req.headers.limit)
+            'message': `${req.headers.limit ?? 1} message(s) recieved`,
+            'output': UnreadMessages[uuid].splice(0, req.headers.limit ?? 1)
         })
     }else{
         console.log(`${req.ip} tried to use server key "${req.headers.key}" and failed`)
@@ -133,51 +133,24 @@ app.get('/WorldQL/Message',(req,res)=>{
 Sends A message to WorldQL
 ->{
     key:string,
-    worldName: string,
-    replication?: number,
-    global?:boolean(true),
-    position?:Vec3dT,
-    payload?: MessagePayload
+    message: MessageT
 }
 <- []
 */
 app.post('/WorldQL/Message',(req,res)=>{
     if (Object.keys(Clients).indexOf(req.headers.key) != -1){
-        if (req.headers.worldName == undefined){
-            res.send({
-                'failed': true,
-                'message': 'Missing header "worldName"'
-            })
-            return
-        }
+        if (req.headers.message == undefined){res.send({
+            'failed':true,
+            'message': 'missing message data'
+        });return}
         var Wql = Clients[req.headers.key]
-        req.headers.global ??= true;
-        if (req.headers.global){
-            updateLastSeen(req.headers.key)
-            Wql.GlobalMessage(
-                req.headers.worldName,
-                req.headers.replication ?? wql.Replication.ExceptSelf,
-                req.headers.payload
-            )
-            res.send({
-                'failed': false,
-                'message': 'GlobalMessage sent',
-                'output': []
-            })
-        }else{
-            updateLastSeen(req.headers.key)
-            Wql.LocalMessage(
-                req.headers.worldName,
-                req.headers.position,
-                req.headers.replication ?? wql.Replication.ExceptSelf,
-                req.headers.payload
-            )
-            res.send({
-                'failed': false,
-                'message': 'LocalMessage sent',
-                'output': []
-            })
-        }
+        let msg = JSON.parse(req.headers.message)
+        Wql.sendRawMessage(msg,msg.replication)
+        res.send({
+            'failed':false,
+            'message': 'message sent',
+            'output': []
+        })
     }else{
         console.log(`${req.ip} tried to use server key "${req.headers.key}" and failed`)
         console.log(`current Keys are:`)

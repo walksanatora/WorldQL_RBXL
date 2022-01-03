@@ -19,18 +19,18 @@ local function tableContains(table: table,value: any):boolean
     return false
 end
 
-function WQL.createNew(URL:string,listenTimer:number|nil)
+function WQL.createNew(URL:string,listenTimer:number|nil,listenGETLimit:number|nil)
     --#region local values
     local ret = {}
     local WQLAPIKEY = ''
-    local UnreadMessages = 0
     local Connected = false
     if listenTimer > 20 then
         error('listenTimer must be less then 20 seconds')
     end
     local options = {
         ['URL'] = URL,
-        ['listenTimer'] = listenTimer or 1
+        ['listenTimer'] = listenTimer or 1,
+        ['listenGETLimit'] =  listenGETLimit or 5
     }
     local Event_on = {
         ['ready'] = {}, --implemented
@@ -38,6 +38,7 @@ function WQL.createNew(URL:string,listenTimer:number|nil)
         ['peerDisconnect'] = {},
         ['globalMessage'] = {},
         ['localMessage'] = {},
+        ['rawMessage'] = {},
         ['disconnect'] = {}, --implemented
         ['recordReply'] = {}
     }
@@ -47,10 +48,10 @@ function WQL.createNew(URL:string,listenTimer:number|nil)
         ['peerDisconnect'] = {},
         ['globalMessage'] = {},
         ['localMessage'] = {},
+        ['rawMessage'] = {},
         ['disconnect'] = {},
         ['recordReply'] = {}
     }
-    
     --#endregion
     --#region local util functions
     local function fireEvent(event:string,args:{[number] : any})
@@ -114,7 +115,24 @@ function WQL.createNew(URL:string,listenTimer:number|nil)
                 if output.failed then
                     error(output.message)
                 end
-                UnreadMessages = output.output.messages
+                if output.output.messages >= 0 then
+                    local messages = httpService:JSONDecode(httpService:RequestAsync({
+                        ['Url'] = options.URL .. '/WorldQL/Message',
+                        ['Method'] = 'GET',
+                        ['Headers'] = {
+                            ['key'] =  WQLAPIKEY,
+                            ['limit'] = options.listenGETLimit
+                        }
+                    }).Body)
+                    for key, value in pairs(messages.output) do
+                        if value.instruction == DataTypes.Enum.Instruction.GlobalMessage then
+                            fireEvent('globalMessage',value)
+                        elseif value.instruction == DataTypes.Enum.Instruction.LocalMessage then
+                            fireEvent('localMessage',value)
+                        end
+                        fireEvent('rawMessage',value)
+                    end
+                end
             end
         end)
         fireEvent('ready')
