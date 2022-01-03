@@ -167,6 +167,7 @@ app.post('/WorldQL/Message',(req,res)=>{
             return
         }
         var Wql = Clients[req.headers.key]
+        var msg = req.body
         Wql.sendRawMessage(msg,msg.replication)
         res.send({
             'failed':false,
