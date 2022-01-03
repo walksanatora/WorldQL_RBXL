@@ -4,7 +4,10 @@ import * as crypto from 'node:crypto'
 import * as JSON from 'JSON'
 
 const app = express.express()
-app.use(express.json())
+app.use((req,res,next)=>{
+    console.log(req)
+    next()
+})
 const port = process.env.PORT || 2030
 const WQLWebsocket = process.env['WQL_WEBSOCKET'] || 'ws://10.0.0.148:8080'
 
