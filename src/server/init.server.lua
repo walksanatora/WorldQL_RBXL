@@ -14,4 +14,4 @@ for i = 0, 30, 1 do
     print('waiting '..i..'/30')
     wait(1)
 end
-client.disconect()
+client.disconnect()
