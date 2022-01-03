@@ -207,12 +207,26 @@ app.post('/WorldQL/Message',(req,res)=>{
     }
 })
 
+/*
+Pings to keep you alive *and* gives you the ammount of messages
+-> {
+    key:string
+}
+<- {
+    messages:number -- the ammount of UnreadMessages you have
+}
+*/
 app.get('/WorldQL/Ping',(req,res)=>{
     if (Object.keys(Clients).indexOf(req.headers.key) != -1){
         updateLastSeen(req.headers.key)
+        var uuid = Clients[req.headers.key].uuid
+        if (UnreadMessages[uuid] == undefined){UnreadMessages[uuid] = []}
         res.send({
             'failed':false,
-            'message': 'updated last seen time'
+            'message': 'updated last seen time',
+            'output': {
+                'messages': UnreadMessages[Wql.uuid].length ?? 0
+            }
         })
     }else{
         res.send({

@@ -1,5 +1,4 @@
 local WQL = {} --create api table
-local MessagingService = game:GetService('MessagingService')
 local httpService = game:GetService('HttpService')
 local DataTypes = require(script.DataTypes)
 
@@ -23,6 +22,11 @@ end
 function WQL.createNew(URL:string,listenTimer:number|nil)
     --#region local values
     local ret = {}
+    local WQLAPIKEY = ''
+    local UnreadMessages = 0
+    if listenTimer > 20 then
+        error('listenTimer must be less then 20 seconds')
+    end
     local options = {
         ['URL'] = URL,
         ['listenTimer'] = listenTimer or 1
@@ -47,9 +51,6 @@ function WQL.createNew(URL:string,listenTimer:number|nil)
         ['disconect'] = {},
         ['recordReply'] = {}
     }
-    local UUID: string = httpService:GenerateGUID(false)
-    local WSAPI: table = require(script.WebSocket)
-    WSAPI.Setup('furry-act.auto.playit.gg','41075')
     
     --#endregion
     --#region local util functions
@@ -91,132 +92,29 @@ function WQL.createNew(URL:string,listenTimer:number|nil)
     end
 
     function ret.connect()
-        WSAPI.onopen = function()
-            print('connected WebSocket')
-            fireEvent('ready')
+        local data = httpService:RequestAsync({
+            options.URL .. '/WorldQL/Ping',
+            'GET'
+        })
+        local dataT = httpService:JSONDecode(data)
+        if dataT.failed then
+            error(dataT.message)
         end
-        WSAPI.onclose = function()
-            print('closed WebSocket')
-            fireEvent('disconnect')
-        end
-        WSAPI.Connect(options.URL)
-        WSAPI.StartListen(options.listenTimer)
-    end
-
-    function ret.disconnect(): boolean
-        return WSAPI.disconect()
-    end
-
-    function ret.sendRawMessage(message: DataTypes.MessageT):boolean | nil
-        if not WSAPI.IsConnected() then
-            error('cannot send messages before client is connected')
-        end
-        if message.senderUUID == nil then
-            message.senderUUID = UUID
-        end
-        local serilizedMessage = httpService.JSONEncode(message)
-        return WSAPI.Send(serilizedMessage)
-    end
-
-    function ret.sendGlobalMessage(
-        worldName:string,
-        replication:number|nil,
-        payload:DataTypes.MessageT|nil
-    )
-        local Message: DataTypes.MessageT = {
-            instruction = DataTypes.Enum.Instruction.GlobalMessage,
-            worldName = worldName,
-            replication = replication or DataTypes.Enum.Replication.ExceptSelf,
-            parameter = payload.parameter or '',
-            flex = payload.flex or '',
-            records = payload.records or {},
-            entities = payload.entities or {}
-        }
-        ret.sendRawMessage(Message)
-    end
-
-    function ret.sendLocalMessage(
-        worldName: string,
-        position: DataTypes.Vec3T,
-        replication: number|nil,
-        payload: DataTypes.MessageT|nil
-    )
-        local Message: DataTypes.MessageT = {
-            instruction = DataTypes.Enum.Instruction.LocalMessage,
-            worldName = worldName,
-            replication = replication or DataTypes.Enum.Replication.ExceptSelf,
-            parameter = payload.parameter or '',
-            flex = payload.flex or '',
-            records = payload.records or {},
-            entities = payload.entities or {}
-        }
-        ret.sendRawMessage(Message)
-    end
-
-    function ret.recordCreate(
-        worldName: string,
-        records: {[number]:DataTypes.RecordT}
-    )
-        local msg: DataTypes.MessageT = {
-            instruction = DataTypes.Enum.Instruction.RecordCreate,
-            worldName = worldName,
-            records = records
-        }
-        ret.sendRawMessage(msg)
-    end
-
-    function ret.recordRead(
-        worldName: string,
-        position: DataTypes.Vec3T
-    )
-        local msg: DataTypes.MessageT = {
-            instruction = DataTypes.Enum.Instruction.RecordRead,
-            worldName = worldName,
-            position = position
-        }
-        ret.sendRawMessage(msg)
-    end
-
-    function ret.recordDelete(
-        worldName: string,
-        records: {[number]:DataTypes.RecordT}
-    )
-        local msg: DataTypes.MessageT = {
-            instruction = DataTypes.Enum.Instruction.RecordDelete,
-            worldName = worldName,
-            records = records
-        }
-        ret.sendRawMessage(msg)
-    end
-
-    function ret.areaSubscribe(
-        worldName:string,
-        position:DataTypes.Vec3T
-    )
-        local msg: DataTypes.MessageT = {
-            instruction = DataTypes.Enum.Instruction.AreaSubscribe,
-            worldName = worldName,
-            position = position
-        }
-        ret.sendRawMessage(msg)
-    end
-
-    function ret.areaUnsubscribe(
-        worldName:string,
-        position:DataTypes.Vec3T
-    )
-        local msg: DataTypes.MessageT = {
-            instruction = DataTypes.Enum.Instruction.AreaUnsubscribe,
-            worldName = worldName,
-            position = position
-        }
-        ret.sendRawMessage(msg)
-    end
-
-    --#endregion
-    --#region Internal
-    WSAPI.onmessage = function(message:string)
-        print('message',message)
+        WQLAPIKEY = dataT.output[1]
+        print(WQLAPIKEY)
+        task.spawn(function()
+            while task.wait(options.listenTimer) do
+                local output = httpService:JSONDecode(httpService:RequestAsync({
+                    options.URL .. '/WorldQL/Ping',
+                    'GET',
+                    {['key'] =  WQLAPIKEY},
+                }))
+                if output.failed then
+                    error(output.message)
+                end
+                UnreadMessages = output.output.messages
+            end
+        end)
     end
     --#endregion
     return ret
