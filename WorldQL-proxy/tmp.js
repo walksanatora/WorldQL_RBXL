@@ -6,12 +6,15 @@ const wqlc = new wql.Client({
 })
 
 wqlc.on('ready',()=>{
-    wqlc.globalMessage('@global',wql.Replication.ExceptSelf,new MessagePayload(
-        'parameter string',
-        undefined,
-        undefined,
-        'flex string'
-    ))
+    console.log('ready')
+    wqlc.globalMessage('@global',wql.Replication.ExceptSelf,{
+        parameter: 'parameter string',
+        records: undefined,
+        entities: undefined,
+        flex: 'flex string'
+    })
+    console.log('done')
+    wqlc.disconnect()
 })
 
 wqlc.connect()

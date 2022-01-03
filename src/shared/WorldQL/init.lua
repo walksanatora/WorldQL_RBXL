@@ -115,7 +115,7 @@ function WQL.createNew(URL:string,listenTimer:number|nil,listenGETLimit:number|n
                 if output.failed then
                     error(output.message)
                 end
-                if output.output.messages >= 0 then
+                if output.output.messages >= 1 then
                     local messages = httpService:JSONDecode(httpService:RequestAsync({
                         ['Url'] = options.URL .. '/WorldQL/Message',
                         ['Method'] = 'GET',
