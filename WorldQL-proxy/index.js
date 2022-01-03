@@ -150,7 +150,7 @@ app.get('/WorldQL/Message',(req,res)=>{
 Sends A message to WorldQL
 ->{
     key:string,
-    message: MessageT
+    (body) message: MessageT
 }
 <- []
 */
@@ -218,6 +218,13 @@ app.get('/WorldQL/Ping',(req,res)=>{
         })
     }
 })
+
+
+//records
+// POST - recordCreate
+// GET - recordRead
+// DELETE - recordDelete
+LoggingClient.recordCreate()
 
 setInterval(()=>{
     var object = LastSeen

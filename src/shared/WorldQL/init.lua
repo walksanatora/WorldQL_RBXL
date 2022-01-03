@@ -34,13 +34,13 @@ function WQL.createNew(URL:string,listenTimer:number|nil,listenGETLimit:number|n
     }
     local Event_on = {
         ['ready'] = {}, --implemented
-        ['peerConnect'] = {},
-        ['peerDisconnect'] = {},
-        ['globalMessage'] = {},
-        ['localMessage'] = {},
-        ['rawMessage'] = {},
+        ['peerConnect'] = {}, --implemented
+        ['peerDisconnect'] = {}, --implemented
+        ['globalMessage'] = {}, --implemented
+        ['localMessage'] = {}, --implemented
+        ['rawMessage'] = {}, --implemented
         ['disconnect'] = {}, --implemented
-        ['recordReply'] = {}
+        ['recordReply'] = {} --implemented
     }
     local Event_once = {
         ['ready'] = {},
@@ -130,6 +130,12 @@ function WQL.createNew(URL:string,listenTimer:number|nil,listenGETLimit:number|n
                             fireEvent('globalMessage',{value})
                         elseif value.instruction == DataTypes.Enum.Instruction.LocalMessage then
                             fireEvent('localMessage',{value})
+                        elseif value.instruction == DataTypes.Enum.Instruction.RecordReply then
+                            fireEvent('recordReply',{value})
+                        elseif value.instruction == DataTypes.Enum.Instruction.peerConnect then
+                            fireEvent('peerConnect',{value})
+                        elseif value.instruction == DataTypes.Enum.Instruction.peerDisconnect then
+                            fireEvent('peerDisconnect',{value})
                         end
                         fireEvent('rawMessage',{value})
                     end
@@ -158,9 +164,53 @@ function WQL.createNew(URL:string,listenTimer:number|nil,listenGETLimit:number|n
             false,
             {['key'] =  WQLAPIKEY})
         )
-        
     end
 
+    function ret.sendGlobalMessage(worldName:string, replication:number|nil, payload:DataTypes.MessagePayload)
+        return ret.sendRawMessage({
+            ['instruction'] = DataTypes.Enum.GlobalMessage,
+            ['parameter'] = payload.parameter,
+            ['worldName'] = worldName,
+            ['replication'] = replication or DataTypes.Enum.ExceptSelf,
+            ['records'] = payload.records,
+            ['entities'] = payload.entities,
+        })
+    end
+    function ret.sendLocalMessage(worldName:string,position:DataTypes.Vec3T, replication:number|nil, payload:DataTypes.MessagePayload)
+        return ret.sendRawMessage({
+            ['instruction'] = DataTypes.Enum.LocalMessage,
+            ['parameter'] = payload.parameter,
+            ['worldName'] = worldName,
+            ['position'] = position,
+            ['replication'] = replication or DataTypes.Enum.ExceptSelf,
+            ['records'] = payload.records,
+            ['entities'] = payload.entities,
+        })
+    end
+
+    function ret.recordCreate(worldName:string, records: { [number] : DataTypes.RecordT })
+        return ret.sendRawMessage({
+            ['instruction'] = DataTypes.Enum.Instruction.RecordCreate,
+            ['worldName'] = worldName,
+            ['records'] = records
+        })
+    end
+
+    function ret.recordDelete(worldName:string, records: { [number] : DataTypes.RecordT })
+        return ret.sendRawMessage({
+            ['instruction'] = DataTypes.Enum.Instruction.RecordDelete,
+            ['worldName'] = worldName,
+            ['records'] = records
+        })
+    end
+
+    function ret.recordRead(worldName:string,position:DataTypes.Vec3T)
+        return ret.sendRawMessage({
+            ['instruction'] = DataTypes.Enum.Instruction.RecordRead,
+            ['worldName'] = worldName,
+            ['position'] = position
+        })
+    end
     --#endregion
     return ret
 end
