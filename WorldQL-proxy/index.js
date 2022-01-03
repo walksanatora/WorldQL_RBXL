@@ -27,6 +27,7 @@ const UnreadMessages = {}
 const LastSeen = {}
 
 function addMessageToUnread(uuid,Message){
+    console.log(`adding message to uuid: ${uuid}`)
     if (UnreadMessages[uuid] == undefined){UnreadMessages[uuid] = []}
     UnreadMessages[uuid].push(Message)
 }
@@ -124,11 +125,11 @@ app.get('/WorldQL/Message',(req,res)=>{
         console.log(`getting ${req.headers.limit ?? 1} messages for key: ${req.headers.key}`)
         var Wql = Clients[req.headers.key]
         var uuid = Wql.uuid
+        updateLastSeen(req.headers.key)
         if ((UnreadMessages[uuid] == undefined)||(UnreadMessages[uuid] == [])){res.send({
             'failed': true,
             'message': 'no messages to be recieved'
         })}
-        updateLastSeen(req.headers.key)
         res.send({
             'failed': false,
             'message': `${req.headers.limit ?? 1} message(s) recieved`,
