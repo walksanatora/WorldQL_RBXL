@@ -157,15 +157,16 @@ function WQL.createNew(URL:string,listenTimer:number|nil,listenGETLimit:number|n
     end
 
     function ret.sendRawMessage(Message:DataTypes.MessageT)
-        return httpService:JSONDecode(httpService:PostAsync(
+        local data = httpService:JSONDecode(httpService:PostAsync(
             options.URL .. '/WorldQL/Message',
             httpService:JSONEncode(Message),
             Enum.HttpContentType.ApplicationJson,
             false,
-            {['key'] =  WQLAPIKEY})
-        )
+            {['key'] =  WQLAPIKEY}))
+        if data.failed then
+            error(data.message)
+        end
     end
-
     function ret.sendGlobalMessage(worldName:string, replication:number|nil, payload:DataTypes.MessagePayload)
         return ret.sendRawMessage({
             ['instruction'] = DataTypes.Enum.GlobalMessage,

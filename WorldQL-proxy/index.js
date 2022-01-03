@@ -78,7 +78,7 @@ key: ${key}`)
         ]})
         WqlClient.on('rawMessage',(message)=>{
             let copy = JSON.parse(JSON.stringify(message))
-            copy.flex = new TextDecoder().decode(copy.flex)
+            copy.flex = (copy.flex instanceof Uint8Array)?new TextDecoder().decode(copy.flex) : copy.flex
             addMessageToUnread(WqlClient.uuid,copy)
         })
     })
