@@ -5,6 +5,7 @@ import MessageT from './Wql_objects.js'
 
 const app = express()
 const port = process.env.PORT || 2030
+const WQLWebsocket = process.env['WQL_WEBSOCKET'] || 'ws://10.0.0.148:8080'
 
 const Clients = {}
 const UnreadMessages = {}
@@ -41,7 +42,7 @@ Generates a new Auth key and uuid pair
 app.post('/WorldQL/Auth',(req,res)=>{
     console.log('creating client')
     const WqlClient = new wql.Client({
-        url: "ws://10.0.0.148:8080",
+        url: WQLWebsocket,
         autoconnect: false
     })
     var key = crypto.randomBytes(Math.ceil(36 / 2)).toString('hex').slice(0, 36)
