@@ -116,7 +116,7 @@ app.get('/WorldQL/Message',(req,res)=>{
         res.send({
             'failed': false,
             'message': `${req.headers.limit ?? 1} message(s) recieved`,
-            'output': UnreadMessages[uuid].splice(0, req.headers.limit ?? 1)
+            'output': UnreadMessages[uuid].splice(0, parseInt(req.headers.limit ?? 1))
         })
     }else{
         console.log(`${req.ip} tried to use server key "${req.headers.key}" and failed`)
@@ -203,7 +203,7 @@ setInterval(()=>{
             var ourTime = Date.now()
             if ((ourTime - element) >= 20000){
                 var WQLC = Clients[key]
-                console.log(`Disconnecting Client
+                console.log(`Disconnecting Client (timeout)
 UUID: ${WQLC.uuid}
 key: ${key}`)
                 delete UnreadMessages[WQLC.uuid]
