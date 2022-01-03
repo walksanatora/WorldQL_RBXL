@@ -1,9 +1,10 @@
-import express from "express"
+import * as express from "express"
 import * as wql from '@worldql/client'
 import * as crypto from 'node:crypto'
 import * as JSON from 'JSON'
 
-const app = express()
+const app = express.express()
+app.use(express.json())
 const port = process.env.PORT || 2030
 const WQLWebsocket = process.env['WQL_WEBSOCKET'] || 'ws://10.0.0.148:8080'
 

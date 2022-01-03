@@ -151,14 +151,14 @@ function WQL.createNew(URL:string,listenTimer:number|nil,listenGETLimit:number|n
     end
 
     function ret.sendRawMessage(Message:DataTypes.MessageT)
-        return httpService:JSONDecode(httpService:RequestAsync({
-            ['Url'] = options.URL .. '/WorldQL/Message',
-            ['Method'] = 'POST',
-            ['Headers'] = {
-                ['key'] =  WQLAPIKEY,
-            },
-            ['Body'] = httpService:JSONEncode(Message)
-        }).Body)
+        return httpService:JSONDecode(httpService:PostAsync(
+            options.URL .. '/WorldQL/Message',
+            httpService:JSONEncode(Message),
+            Enum.HttpContentType.ApplicationJson,
+            false,
+            {['key'] =  WQLAPIKEY})
+        )
+        
     end
 
     --#endregion
