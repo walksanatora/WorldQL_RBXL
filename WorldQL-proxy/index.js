@@ -20,6 +20,8 @@ LoggingClient.on('rawMessage',(msg)=>{
     console.log(msg)
 })
 
+LoggingClient.connect()
+
 const Clients = {}
 const UnreadMessages = {}
 const LastSeen = {}
