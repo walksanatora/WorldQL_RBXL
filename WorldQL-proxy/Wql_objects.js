@@ -44,11 +44,22 @@ class EntityT {
     }
 }
 
+class MessagePayload {
+    constructor( parameter = null, records = [], entities = [], flex = []) {
+        this.parameter = parameter;
+        this.records = records;
+        this.entities = entities;
+        this.flex = flex;
+        Object.freeze(this)
+    }
+}
+
 const def = {
     MessageT: MessageT,
     Vec3dT: Vec3dT,
     RecordT: RecordT,
-    EntityT: EntityT
+    EntityT: EntityT,
+    MessagePayload: MessagePayload,
 }
 
 export default def
