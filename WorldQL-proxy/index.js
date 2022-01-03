@@ -1,7 +1,6 @@
 import express from "express"
 import * as wql from '@worldql/client'
 import * as crypto from 'node:crypto'
-import * as JSON from 'JSON'
 
 const app = express()
 app.use(express.json())
@@ -168,7 +167,6 @@ app.post('/WorldQL/Message',(req,res)=>{
             return
         }
         var Wql = Clients[req.headers.key]
-        let msg = JSON.parse(req.body)
         Wql.sendRawMessage(msg,msg.replication)
         res.send({
             'failed':false,
