@@ -42,10 +42,9 @@ client.on('disconnect',function()
 end)
 
 client.on('globalMessage',function(message)
+    print(message)
     if message.worldName == 'roblox/chat' then
         chat:Chat(i,message.parameter,Enum.ChatColor.Green)
-    else
-        print(message)
     end
 end)
 client.connect()

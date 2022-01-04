@@ -7,21 +7,6 @@ app.use(express.json())
 const port = process.env.PORT || 2030
 const WQLWebsocket = process.env['WQL_WEBSOCKET'] || 'ws://10.0.0.148:8080'
 
-const LoggingClient = new wql.Client({
-    url: WQLWebsocket,
-    autoconnect: false
-})
-
-LoggingClient.on('ready',()=>{
-    console.log('wql logger ready')
-})
-
-LoggingClient.on('rawMessage',(msg)=>{
-    console.log(msg)
-})
-
-LoggingClient.connect()
-
 const Clients = {}
 const UnreadMessages = {}
 const LastSeen = {}
@@ -133,7 +118,7 @@ app.get('/WorldQL/Message',(req,res)=>{
             'message': 'no messages to be recieved'
         })}
         console.log('sending mesages')
-        console.log(UnreadMessages[uuid].splice(0,parseInt(req.headers.key)))
+        console.log(UnreadMessages[uuid].slice(0,parseInt(req.headers.key)))
         res.send({
             'failed': false,
             'message': `${req.headers.limit ?? 1} message(s) recieved`,

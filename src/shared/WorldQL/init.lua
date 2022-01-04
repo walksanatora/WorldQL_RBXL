@@ -125,7 +125,9 @@ function WQL.createNew(URL:string,listenTimer:number|nil,listenGETLimit:number|n
                             ['limit'] = tostring(options.listenGETLimit)
                         }
                     }).Body)
+                    print(messages)
                     for key, value in pairs(messages.output) do
+                        print('message',value,'recieved')
                         if value.instruction == DataTypes.Enum.Instruction.GlobalMessage then
                             fireEvent('globalMessage',{value})
                         elseif value.instruction == DataTypes.Enum.Instruction.LocalMessage then
