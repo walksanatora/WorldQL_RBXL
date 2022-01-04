@@ -132,6 +132,8 @@ app.get('/WorldQL/Message',(req,res)=>{
             'failed': true,
             'message': 'no messages to be recieved'
         })}
+        console.log('sending mesages')
+        console.log(UnreadMessages[uuid].splice(0,parseInt(req.headers.key)))
         res.send({
             'failed': false,
             'message': `${req.headers.limit ?? 1} message(s) recieved`,
