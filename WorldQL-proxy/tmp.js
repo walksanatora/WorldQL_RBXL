@@ -7,8 +7,8 @@ const wqlc = new wql.Client({
 
 wqlc.on('ready',()=>{
     console.log('ready')
-    wqlc.globalMessage('@global',wql.Replication.ExceptSelf,{
-        parameter: 'parameter string',
+    wqlc.globalMessage('roblox/chat',wql.Replication.ExceptSelf,{
+        parameter: 'exampleMessage',
         records: undefined,
         entities: undefined,
         flex: 'flex string'
