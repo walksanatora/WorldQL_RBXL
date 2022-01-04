@@ -14,10 +14,10 @@ local client = WQL.createNew('http://furry-act.auto.playit.gg:41075',2)
 client.on('ready',function()
     print('the client has successfully connected')
     Players.PlayerAdded:Connect(function(Player)
-        Player.Chatted:Connect(function(message)
+        Player.Chatted:Connect(function(message,plr)
             print('chatted')
             client.sendGlobalMessage('roblox',WQL_Types.Enum.Replication.ExceptSelf,{
-                ['parameter'] = Chat:FilterStringAsync(message),
+                ['parameter'] = Chat:FilterStringAsync(message,Player,plr or Player),
                 ['flex'] = 'rblxChat',
             })
         end)
