@@ -7,6 +7,14 @@ local RepStor = game:GetService('ReplicatedStorage')
 local WQL = require(RepStor.Common.WorldQL)
 local WQL_Types = require(RepStor.Common.WorldQL.DataTypes)
 
+local ChatService = require(game:GetService("ServerScriptService"):WaitForChild("ChatServiceRunner").ChatService)
+
+local function SendSystemMessageToAllSpeakers(msg, channel)
+    for _, v in pairs(ChatService:GetSpeakers()) do
+       v:SendSystemMessage(msg, channel)
+    end
+ end
+
 local Chat = game:GetService('Chat')
 local Players = game:GetService('Players')
 
@@ -44,7 +52,7 @@ end)
 client.on('globalMessage',function(message)
     print(message)
     if message.worldName == 'roblox/chat' then
-        chat:Chat(i,message.parameter,Enum.ChatColor.Green)
+        SendSystemMessageToAllSpeakers(message.parameter,'all')
     end
 end)
 client.connect()
