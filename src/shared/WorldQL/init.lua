@@ -157,6 +157,7 @@ function WQL.createNew(URL:string,listenTimer:number|nil,listenGETLimit:number|n
     end
 
     function ret.sendRawMessage(Message:DataTypes.MessageT)
+        print('sending message',Message)
         local data = httpService:JSONDecode(httpService:PostAsync(
             options.URL .. '/WorldQL/Message',
             httpService:JSONEncode(Message),
