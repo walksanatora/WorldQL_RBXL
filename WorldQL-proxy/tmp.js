@@ -13,8 +13,10 @@ wqlc.on('ready',()=>{
         entities: undefined,
         flex: 'flex string'
     })
-    console.log('done')
-    wqlc.disconnect()
+    setTimeout(()=>{
+        console.log('done')
+        wqlc.disconnect()
+    },5000)
 })
 
 wqlc.connect()
