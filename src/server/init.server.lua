@@ -16,7 +16,7 @@ client.on('ready',function()
     Players.PlayerAdded:Connect(function(Player)
         Player.Chatted:Connect(function(message,plr)
             print('chatted')
-            client.sendGlobalMessage('roblox',WQL_Types.Enum.Replication.ExceptSelf,{
+            client.sendGlobalMessage('roblox/chat',WQL_Types.Enum.Replication.ExceptSelf,{
                 ['parameter'] = Chat:FilterStringAsync(message,Player,plr or Player),
                 ['flex'] = 'rblxChat',
             })
@@ -27,7 +27,7 @@ client.on('ready',function()
     for i,v in pairs(Players:GetChildren()) do
         v.Chatted:Connect(function(message,plr)
             print('chatted')
-            client.sendGlobalMessage('roblox',WQL_Types.Enum.Replication.ExceptSelf,{
+            client.sendGlobalMessage('roblox/chat',WQL_Types.Enum.Replication.ExceptSelf,{
                 ['parameter'] = Chat:FilterStringAsync(message,v,plr or v),
                 ['flex'] = 'rblxChat',
             })
@@ -41,7 +41,7 @@ client.on('disconnect',function()
 end)
 
 client.on('globalMessage',function(message)
-    if message.flex == 'rbxlChat' then
+    if message.worldName == 'roblox/chat' then
         chat:Chat(i,message.parameter,Enum.ChatColor.Green)
     else
         print(message.flex)
