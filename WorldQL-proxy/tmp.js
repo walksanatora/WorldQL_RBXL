@@ -1,4 +1,6 @@
 import * as wql from '@worldql/client'
+import ps from 'prompt-sync'
+const prompt = ps()
 
 const wqlc = new wql.Client({
     'url': 'ws://10.0.0.148:8080',
@@ -6,13 +8,14 @@ const wqlc = new wql.Client({
 })
 
 wqlc.on('ready',()=>{
-    console.log('ready')
+    console.log('ready, enter message')
     wqlc.globalMessage('roblox/chat',wql.Replication.ExceptSelf,{
-        parameter: 'exampleMessage',
+        parameter: prompt(),
         records: undefined,
         entities: undefined,
         flex: 'flex string'
     })
+    console.log('sent')
     setTimeout(()=>{
         console.log('done')
         wqlc.disconnect()

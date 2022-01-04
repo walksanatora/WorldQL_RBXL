@@ -1,18 +1,16 @@
 print('init-server')
 local chat = game:GetService('Chat')
-local i = Instance.new('Part')
-i.Parent = workspace
-i.Name = 'WQL_Chat'
 local RepStor = game:GetService('ReplicatedStorage')
+local i = Instance.new('RemoteEvent')
+i.Parent = RepStor
+i.Name = 'clientMessage'
 local WQL = require(RepStor.Common.WorldQL)
 local WQL_Types = require(RepStor.Common.WorldQL.DataTypes)
 
 local ChatService = require(game:GetService("ServerScriptService"):WaitForChild("ChatServiceRunner").ChatService)
 
-local function SendSystemMessageToAllSpeakers(msg, channel)
-    for _, v in pairs(ChatService:GetSpeakers()) do
-       v:SendSystemMessage(msg, channel)
-    end
+local function SendSystemMessageToAllSpeakers(msg)
+    i:FireAllClients(msg)
  end
 
 local Chat = game:GetService('Chat')
@@ -52,7 +50,7 @@ end)
 client.on('globalMessage',function(message)
     print(message)
     if message.worldName == 'roblox/chat' then
-        SendSystemMessageToAllSpeakers(message.parameter,'all')
+        SendSystemMessageToAllSpeakers(message.parameter)
     end
 end)
 client.connect()

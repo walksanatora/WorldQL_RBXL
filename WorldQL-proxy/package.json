@@ -19,6 +19,7 @@
     "express": "^4.17.2",
     "flatbuffers": "^2.0.4",
     "JSON": "^1.0.0",
+    "prompt-sync": "^4.2.0",
     "ws": "^8.4.0"
   }
 }
