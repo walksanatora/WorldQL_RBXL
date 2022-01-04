@@ -9,7 +9,7 @@ local WQL_Types = require(RepStor.Common.WorldQL.DataTypes)
 
 local ChatService = require(game:GetService("ServerScriptService"):WaitForChild("ChatServiceRunner").ChatService)
 
-local function SendSystemMessageToAllSpeakers(msg)
+local function SendToChat(msg)
     i:FireAllClients(msg)
  end
 
@@ -50,7 +50,16 @@ end)
 client.on('globalMessage',function(message)
     print(message)
     if message.worldName == 'roblox/chat' then
-        SendSystemMessageToAllSpeakers(message.parameter)
+        SendToChat(message.parameter)
     end
 end)
+
+client.on('peerConnect',function(message)
+    SendToChat('UUID: '..message.parameter..' has connected')
+end)
+
+client.on('peerDisconnect',function(message)
+    SendToChat('UUID: '..message.parameter..' has disconnected')
+end)
+
 client.connect()
