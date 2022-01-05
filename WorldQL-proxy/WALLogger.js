@@ -128,6 +128,21 @@ class Logger{
 			break;
 			case 'exit':
 				process.exit()
+			case 'help':
+				this._print([
+					'Help Menu',
+					'Commands:',
+					'inspect'.blue + '<messageNO>',
+					'calls Logger.inspectMessage',
+					'short'.blue + '<messageNO>',
+					'calls Logger.shortMessage',
+					'long'.blue + '<messageNO>',
+					'calls Logger.longMessage',
+					'clear'.blue,
+					'clears all the lines of the console',
+					'exit'.red,
+					'exist the REPL and the program'
+				].join('\n'))
 			break;
 			default:
 				this._print('Invalid Command: '.red + util.inspect(split,{color:true}))
