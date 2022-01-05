@@ -123,6 +123,9 @@ class Logger{
 				this._term.clearItems()
 				this._scr.render()
 			break;
+			case 'exit':
+				process.exit()
+			break;
 			default:
 				this._print('Invalid Command'.red)
 			break;
