@@ -19,6 +19,8 @@ after that you get a `client`
 `.disconenct()` - disconnects from the api fires event `disconnect`<br>
 <br>
 `.sendRawMessage(Message: MessageT)` - sends a message json to WorldQL<br>
+inputs:<br>
+`Message` - a fully build [MessageT](src/shared/WorldQL/DataTypes.lua#L41-L51)
 <br>
 `.sendGlobalMessage(worldName:string, replication:number|nil, payload:MessagePayload)`<br>
 inputs:<br>
