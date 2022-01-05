@@ -172,35 +172,35 @@ function WQL.createNew(URL:string,listenTimer:number|nil,listenGETLimit:number|n
     end
     function ret.sendGlobalMessage(worldName:string, replication:number|nil, payload:DataTypes.MessagePayload)
         return ret.sendRawMessage({
-            ['instruction'] = DataTypes.Enum.GlobalMessage,
+            ['instruction'] = DataTypes.Enum.Instruction.GlobalMessage,
             ['parameter'] = payload.parameter,
             ['worldName'] = worldName,
-            ['replication'] = replication or DataTypes.Enum.ExceptSelf,
+            ['replication'] = replication or DataTypes.Enum.Replication.ExceptSelf,
             ['records'] = payload.records,
             ['entities'] = payload.entities,
         })
     end
     function ret.sendLocalMessage(worldName:string,position:DataTypes.Vec3T, replication:number|nil, payload:DataTypes.MessagePayload)
         return ret.sendRawMessage({
-            ['instruction'] = DataTypes.Enum.LocalMessage,
+            ['instruction'] = DataTypes.Enum.Instruction.LocalMessage,
             ['parameter'] = payload.parameter,
             ['worldName'] = worldName,
             ['position'] = position,
-            ['replication'] = replication or DataTypes.Enum.ExceptSelf,
+            ['replication'] = replication or DataTypes.Enum.Replication.ExceptSelf,
             ['records'] = payload.records,
             ['entities'] = payload.entities,
         })
     end
     function ret.recordCreate(worldName:string, records: { [number] : DataTypes.RecordT })
         return ret.sendRawMessage({
-            ['instruction'] = DataTypes.Enum.Instruction.RecordCreate,
+            ['instruction'] = DataTypes.Enum.Instruction.Instruction.RecordCreate,
             ['worldName'] = worldName,
             ['records'] = records
         })
     end
     function ret.recordDelete(worldName:string, records: { [number] : DataTypes.RecordT })
         return ret.sendRawMessage({
-            ['instruction'] = DataTypes.Enum.Instruction.RecordDelete,
+            ['instruction'] = DataTypes.Enum.Instruction.Instruction.RecordDelete,
             ['worldName'] = worldName,
             ['records'] = records
         })
