@@ -4,6 +4,8 @@ import * as crypto from 'node:crypto'
 
 import logger from './Logger.js'
 
+logger.startREPL()
+
 const app = express()
 app.use(express.json())
 const port = process.env.PORT || 2030
