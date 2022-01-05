@@ -104,6 +104,9 @@ class Logger{
 	}
 	parseCommand(command){
 		if (!(this.replEnabled)){return}
+		if (command.endsWith('\n')){
+			command = command.substring(0,command.length-2)
+		}
 		let split = command.split(' ')
 		this._print('$ '.green + command.grey)
 		switch (split[0]) {
