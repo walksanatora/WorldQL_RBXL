@@ -87,6 +87,18 @@ const invalidKey = new WLog.LogFormatter({
     }
 })
 
+const genericMessage = new WLog.LogFormatter({
+    'formatShort': (...v)=>{
+        return util.format('(%d) '.blue,...v)
+    },
+    'formatLong': (...v)=>{
+        return util.format('(%d) '.blue,...v)
+    },
+    'inspect': (ths) =>{
+        return util.format('Generic Message "%s"',ths.values.join(' '))
+    }
+})
+
 const logger = new WLog.Logger({
     //'File':'tmp.log.json',
     'DefaultMessages': {
@@ -96,7 +108,8 @@ const logger = new WLog.Logger({
         'connectionJoin': connectionJoin,
         'connectionLeave': connectionLeave,
         'connectionLeaveTimeout': connectionLeaveTimeout,
-        'invalidKey': invalidKey
+        'invalidKey': invalidKey,
+        'genericMessage': genericMessage
     },
     'useLong': true
 })

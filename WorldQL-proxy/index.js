@@ -222,5 +222,5 @@ setInterval(()=>{
     }
 },2000)
 app.listen(port, () => {
-    console.log('Server started on: ' + port);
+    logger._print('Server started on: ' + port);
 });
