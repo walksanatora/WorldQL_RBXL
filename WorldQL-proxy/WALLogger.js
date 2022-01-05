@@ -107,16 +107,16 @@ class Logger{
 		let split = command.split(' ')
 		switch (split[0]) {
 			case 'inspect':
-					let inspect = this.inspectMessage(parseInt(split[1]))
+					var inspect = this.inspectMessage(parseInt(split[1]))
 					this._print(inspect)
 				break;
 			case 'short':
-				let short = this.shortMessage(parseInt(split[1]))
+				var short = this.shortMessage(parseInt(split[1]))
 				this._print(short)
 			break;
 			case 'long':
-				let short = this.longMessage(parseInt(split[1]))
-				this._print(short)
+				var long = this.longMessage(parseInt(split[1]))
+				this._print(long)
 			break;
 			case 'clear':
 				this._term.clearItems()
