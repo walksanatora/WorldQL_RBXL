@@ -23,40 +23,40 @@ after that you get a `client`
 `.sendGlobalMessage(worldName:string, replication:number|nil, payload:MessagePayload)`<br>
 inputs:<br>
 `worldName` - the world the message is sent in<br>
-`replication` - a value from [`DataTypes.Enum.Replication`](src/shared/WorldQL/DataTypes.lua#l81-85) default: 0<br>
-`payload` -  the [MessagePayload](src/shared/WorldQL/DataTypes.lua#l53-58)<br>
+`replication` - a value from [`DataTypes.Enum.Replication`](src/shared/WorldQL/DataTypes.lua#L81-L85) default: 0<br>
+`payload` -  the [MessagePayload](src/shared/WorldQL/DataTypes.lua#L53-L58)<br>
 <br>
 `.sendLocalMessage(worldName:string,position:Vec3T, replication:number|nil, payload:MessagePayload)`<br>
 inputs:<br>
 `worldName` - the world the message is sent in<br>
-`position` -  A [Vec3T](src/shared/WorldQL/DataTypes.lua#l5-9) location, can be converted from vector3 using [DataTypes.Converters.Vector3toVec3(V3:Vector3)](src/shared/WorldQL/DataTypes.lua#l12)<br>
-`replication` - a value from [`DataTypes.Enum.Replication`](src/shared/WorldQL/DataTypes.lua#l81-85) default: 0<br>
-`payload` - the [MessagePayload](src/shared/WorldQL/DataTypes.lua#l53-58)<br>
+`position` -  A [Vec3T](src/shared/WorldQL/DataTypes.lua#L5-L9) location, can be converted from vector3 using [DataTypes.Converters.Vector3toVec3(V3:Vector3)](src/shared/WorldQL/DataTypes.lua#L12)<br>
+`replication` - a value from [`DataTypes.Enum.Replication`](src/shared/WorldQL/DataTypes.lua#L81-L85) default: 0<br>
+`payload` - the [MessagePayload](src/shared/WorldQL/DataTypes.lua#L53-L58)<br>
 <br>
 `.sendRecordCreate(worldName:string, records: { [number] : DataTypes.RecordT })`<br>
 inputs:<br>
 `worldName` - the world the message is sent in<br>
-`records` - A list/Array of [RecordT](src/shared/WorldQL/DataTypes.lua#l25-31) values<br>
+`records` - A list/Array of [RecordT](src/shared/WorldQL/DataTypes.lua#L25-L31) values<br>
 <br>
 `.sendRecordDelete(worldName:string, records: { [number] : DataTypes.RecordT })`<br>
 inputs:<br>
 `worldName` - the world the message is sent in<br>
-`records` - A list/Array of [RecordT](src/shared/WorldQL/DataTypes.lua#l25-31) values<br>
+`records` - A list/Array of [RecordT](src/shared/WorldQL/DataTypes.lua#L25-L31) values<br>
 <br>
 `.sendRecordRead(worldName:string, records: { [number] : DataTypes.RecordT })`<br>
 inputs:<br>
 `worldName` - the world the message is sent in<br>
-`records` - A list/Array of [RecordT](src/shared/WorldQL/DataTypes.lua#l25-31) values<br>
+`records` - A list/Array of [RecordT](src/shared/WorldQL/DataTypes.lua#L25-L31) values<br>
 <br>
 `.sendAreaSubscribe(worldName:string,position:Vec3T)`<br>
 inputs:<br>
 `worldName` - the world the message is sent in<br>
-`position` -  A [Vec3T](src/shared/WorldQL/DataTypes.lua#l5-9) location<br>
+`position` -  A [Vec3T](src/shared/WorldQL/DataTypes.lua#L5-L9) location<br>
 <br>
 `.sendAreaUnsubscribe(worldName:string,position:Vec3T)`<br>
 inputs:<br>
 `worldName` - the world the message is sent in<br>
-`position` -  A [Vec3T](src/shared/WorldQL/DataTypes.lua#l5-9) location<br>
+`position` -  A [Vec3T](src/shared/WorldQL/DataTypes.lua#L5-L9) location<br>
 <br>
 if you dont know what a ceartain message type does read about it [here](https://docs.worldql.com/architecture/instructions)<br>
 NOTE: inorder to recieve `GlobalMessage`s in a world you have to be subscribes to some point in the world<br>
