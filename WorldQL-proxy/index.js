@@ -2,6 +2,8 @@ import express from "express"
 import * as wql from '@worldql/client'
 import * as crypto from 'node:crypto'
 
+import logger from './Logger.js'
+
 const app = express()
 app.use(express.json())
 const port = process.env.PORT || 2030
@@ -12,12 +14,10 @@ const UnreadMessages = {}
 const LastSeen = {}
 
 function addMessageToUnread(uuid,Message){
-//    console.log(`adding message to uuid: ${uuid}`)
     if (UnreadMessages[uuid] == undefined){UnreadMessages[uuid] = []}
     UnreadMessages[uuid].push(Message)
 }
 function updateLastSeen(key){
-//    console.log(`updating last seen time for: ${key}`)
     LastSeen[key] = Date.now()
 }
 
@@ -41,17 +41,13 @@ Generates a new Auth key and uuid pair
 <- [UUID,Key]
 */
 app.post('/WorldQL/Auth',(req,res)=>{
-    //console.log('creating client')
     const WqlClient = new wql.Client({
         url: WQLWebsocket,
         autoconnect: false
     })
     var key = crypto.randomBytes(Math.ceil(36 / 2)).toString('hex').slice(0, 36)
-    //console.log('key generated')
     WqlClient.on('ready',()=>{
-        console.log(`Created New Client
-UUID: ${WqlClient.uuid}
-key: ${key}`)
+        logger.logMessage('connectionJoin',[WqlClient.uuid],[WqlClient.uuid,key])
         Clients[key] = WqlClient
         updateLastSeen(key)
         res.send({
@@ -78,9 +74,7 @@ Deletes a WorldQL client using the key
 app.delete('/WorldQL/Auth',(req,res)=>{
     if (Object.keys(Clients).indexOf(req.headers.key) != -1){
         var WQLC = Clients[req.headers.key]
-        console.log(`Disconnecting Client
-UUID: ${WQLC.uuid}
-key: ${req.headers.key}`)
+        logger.logMessage('connectionLeave',[WQLC.uuid],[WQLC.uuid,req.headers.key])
         delete UnreadMessages[WQLC.uuid]
         WQLC.disconnect()
         WQLC.removeAllListeners()
@@ -109,7 +103,7 @@ Gets a Message
 */
 app.get('/WorldQL/Message',(req,res)=>{
     if (Object.keys(Clients).indexOf(req.headers.key) != -1){
-        console.log(`getting ${req.headers.limit ?? 1} messages for key: ${req.headers.key}`)
+        logger._print(`getting ${req.headers.limit ?? 1} messages for key: ${req.headers.key}`)
         var Wql = Clients[req.headers.key]
         var uuid = Wql.uuid
         updateLastSeen(req.headers.key)
@@ -117,8 +111,7 @@ app.get('/WorldQL/Message',(req,res)=>{
             'failed': true,
             'message': 'no messages to be recieved'
         })}
-        console.log('sending mesages')
-        console.log(UnreadMessages[uuid].slice(0,parseInt(req.headers.key)))
+        logger.logMessage('incomingToClient',[req.headers.limit ?? 1,uuid],[UnreadMessages[uuid].slice(0,parseInt(req.headers.key))])
         res.send({
             'failed': false,
             'message': `${req.headers.limit ?? 1} message(s) recieved`,
@@ -146,9 +139,9 @@ Sends A message to WorldQL
 app.post('/WorldQL/Message',(req,res)=>{
     if (Object.keys(Clients).indexOf(req.headers.key) != -1){
         if (req.body == undefined){
-            console.log(`${req.headers.key} just forgot to send a request body`)
-            console.log(req.body)
-            console.log(req)
+            logger._print(`${req.headers.key} just forgot to send a request body`)
+            logger._print(req.body)
+            logger._print(req)
             res.send({
                 'failed':true,
                 'message': 'missing message data'
@@ -157,8 +150,7 @@ app.post('/WorldQL/Message',(req,res)=>{
         }
         var Wql = Clients[req.headers.key]
         var msg = req.body
-        console.log(`sending message from ${Wql.uuid}`)
-        console.log(msg)
+        logger.logMessage('outgoingFromClient',[Wql.uuid],msg)
         msg.flex = new TextEncoder().encode(msg.flex)
         Wql.sendRawMessage(msg,msg.replication)
         res.send({
@@ -201,9 +193,7 @@ app.get('/WorldQL/Ping',(req,res)=>{
             }
         })
     }else{
-        console.log(`${req.ip} tried to use server key "${req.headers.key}" and failed`)
-        console.log(`current Keys are:`)
-        console.log(Object.keys(Clients))
+        logger.logMessage('invalidKey',[req.header.key,req.ip],Object.keys(Clients))
         res.send({
             'failed':true,
             'message': 'invalid server key'
@@ -219,9 +209,7 @@ setInterval(()=>{
             var ourTime = Date.now()
             if ((ourTime - element) >= 20000){
                 var WQLC = Clients[key]
-                console.log(`Disconnecting Client (timeout)
-UUID: ${WQLC.uuid}
-key: ${key}`)
+                logger.logMessage('connectionLeaveTimeout',[WQLC.uuid],[WQLC.uuid,key])
                 delete UnreadMessages[WQLC.uuid]
                 WQLC.disconnect()
                 WQLC.removeAllListeners()
