@@ -105,6 +105,7 @@ class Logger{
 	parseCommand(command){
 		if (!(this.replEnabled)){return}
 		let split = command.split(' ')
+		this._print('$ '.green + command.grey)
 		switch (split[0]) {
 			case 'inspect':
 					var inspect = this.inspectMessage(parseInt(split[1]))
