@@ -1,6 +1,7 @@
 import fs from 'node:fs'
 import util from 'node:util'
 import bless from 'neo-blessed'
+import 'colors'
 
 class LogFormatter{
 	values = []
@@ -50,6 +51,17 @@ class Logger{
 			this.startREPL()
 		}
 	}
+	_print(text){
+		if (this.replEnabled){
+			let lines = text.split('\n')
+			for (let i = 0; i < lines.length; i++) {
+				this._term.addItem(lines[i])
+			}
+			this._scr.render()
+		}else{
+			console.log(log)
+		}
+	}
 	get messageTypes() {return Object.keys(this._Formatters)}
 	get messageCount() {return this._Messages.length}
 	logMessage(messageType,values,extra){
@@ -64,14 +76,21 @@ class Logger{
 		}
 		let form = this._Formatters[messageType]
 		let log = (this._Long)? form.formatLong(...values):form.formatShort(...values)
-		if (this.replEnabled){
-			this._term.addItem(log)
-			this._scr.render()
-		}else{
-			console.log(log)
-		}
+		this._print(log)
 		this._Messages.push(m)
 		if(this.useFile){fs.writeFile(this.fileName,JSON.stringify(this._Messages),()=>{})}
+	}
+	shortMessage(messageNO){
+		const mg = this._Messages[messageNO]
+		if (mg != undefined){
+			return this._Formatters[mg.type].formatShort(...mg.values)
+		}
+	}
+	longMessage(messageNO){
+		const mg = this._Messages[messageNO]
+		if (mg != undefined){
+			return this._Formatters[mg.type].formatLong(...mg.values)
+		}
 	}
 	inspectMessage(messageNO){
 		const mg = this._Messages[messageNO]
@@ -82,6 +101,32 @@ class Logger{
 	loadMessages(arr){
 		if (arr instanceof Array)
 		this._Messages = arr
+	}
+	parseCommand(command){
+		if (!(this.replEnabled)){return}
+		let split = command.split(' ')
+		switch (split[0]) {
+			case 'inspect':
+					let inspect = this.inspectMessage(parseInt(split[1]))
+					this._print(inspect)
+				break;
+			case 'short':
+				let short = this.shortMessage(parseInt(split[1]))
+				this._print(short)
+			break;
+			case 'long':
+				let short = this.longMessage(parseInt(split[1]))
+				this._print(short)
+			break;
+			case 'clear':
+				this._term.clearItems()
+				this._scr.render()
+			break;
+			default:
+				this._print('Invalid Command'.red)
+			break;
+		}
+
 	}
 	startREPL(){
 		this._scr = bless.screen({
@@ -127,7 +172,7 @@ class Logger{
 		this._input.key('enter', async function() {
 	    	var message = this.getValue();
 		    try {
-		        ths._term.addItem(message)
+		        ths.parseCommand(message)
 		    } catch (err) {
 		      // error handling
 		    } finally {
