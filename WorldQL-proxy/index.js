@@ -88,9 +88,7 @@ app.delete('/WorldQL/Auth',(req,res)=>{
             'output':[]
         })
     }else{
-        console.log(`${req.ip} tried to use server key "${req.headers.key}" and failed`)
-        console.log(`current Keys are:`)
-        console.log(Object.keys(Clients))
+        logger.logMessage('invalidKey',[req.header.key,req.ip],Object.keys(Clients))
         res.send({
             'failed': true,
             'message': 'invalid server key'
@@ -161,9 +159,7 @@ app.post('/WorldQL/Message',(req,res)=>{
             'output': []
         })
     }else{
-        console.log(`${req.ip} tried to use server key "${req.headers.key}" and failed`)
-        console.log(`current Keys are:`)
-        console.log(Object.keys(Clients))
+        logger.logMessage('invalidKey',[req.header.key,req.ip],Object.keys(Clients))
         res.send({
             'failed':true,
             'message': 'invalid server key'
