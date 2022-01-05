@@ -127,7 +127,7 @@ class Logger{
 				process.exit()
 			break;
 			default:
-				this._print('Invalid Command'.red)
+				this._print('Invalid Command: '.red + util.inspect(split,{color:true}))
 			break;
 		}
 
