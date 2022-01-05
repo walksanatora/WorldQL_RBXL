@@ -151,6 +151,7 @@ class Logger{
 
 	}
 	startREPL(){
+		if (this.replEnabled){return}
 		this._scr = bless.screen({
     		'smartCSR': true,
     		'title': 'WorldQL Proxy'
