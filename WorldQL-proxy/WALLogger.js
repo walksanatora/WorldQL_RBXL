@@ -128,6 +128,9 @@ class Logger{
 			break;
 			case 'exit':
 				process.exit()
+			case 'logs':
+				this._print('currently have' + `${this._Messages}`.blue + 'logs stored')
+			break;
 			case 'help':
 				this._print([
 					'Help Menu',
