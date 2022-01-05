@@ -16,7 +16,7 @@ local function SendToChat(msg)
 local Chat = game:GetService('Chat')
 local Players = game:GetService('Players')
 
-local client = WQL.createNew('http://furry-act.auto.playit.gg:41075',2)
+local client = WQL.createNew(unpack(script.connection))
 client.on('ready',function()
     print('the client has successfully connected')
     client.areaSubscribe('roblox/chat',{x=0,y=0,z=0})
