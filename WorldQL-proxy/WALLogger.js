@@ -129,7 +129,7 @@ class Logger{
 			case 'exit':
 				process.exit()
 			case 'logs':
-				this._print('currently have' + `${this._Messages}`.blue + 'logs stored')
+				this._print('currently have ' + `${this._Messages.length}`.blue + ' logs stored')
 			break;
 			case 'help':
 				this._print([
@@ -143,6 +143,8 @@ class Logger{
 					'calls Logger.longMessage',
 					'clear'.blue,
 					'clears all the lines of the console',
+					'logs'.blue,
+					'lets you know how many log messages have been stored',
 					'exit'.red,
 					'exist the REPL and the program'
 				].join('\n'))
