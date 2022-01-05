@@ -20,7 +20,7 @@ after that you get a `client`
 <br>
 `.sendRawMessage(Message: MessageT)` - sends a message json to WorldQL<br>
 inputs:<br>
-`Message` - a fully build [MessageT](src/shared/WorldQL/DataTypes.lua#L41-L51)
+`Message` - a fully build [MessageT](src/shared/WorldQL/DataTypes.lua#L41-L51)<br>
 <br>
 `.sendGlobalMessage(worldName:string, replication:number|nil, payload:MessagePayload)`<br>
 inputs:<br>
