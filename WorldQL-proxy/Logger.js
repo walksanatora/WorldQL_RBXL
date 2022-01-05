@@ -98,8 +98,8 @@ logger.logMessage('outgoingFromClient',['UUID_HERE'],'InsertMessageObjectHere')
 logger.logMessage('connectionJoin',['PEER_UUID_HERE'],['UUID','KEY'])
 logger.logMessage('connectionLeave',['PEER_UUID_HERE'],['UUID','KEY'])
 logger.logMessage('connectionLeaveTimeout',['PEER_UUID_HERE'],['UUID','KEY'])
-console.log('\n***Seperation***\n'.bold)
-for (let index = 0; index < logger._Messages.length; index++) {console.log(logger.inspectMessage(index) + '\n')}
+logger._print('\n***Seperation***\n'.bold)
+for (let index = 0; index < logger._Messages.length; index++) {logger._print(logger.inspectMessage(index) + '\n')}
 }
 
 export default logger
