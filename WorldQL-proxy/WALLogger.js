@@ -109,7 +109,7 @@ class Logger{
 	    	'height': '10%',
 	    	'inputOnFocus': true,
 		    'padding': {
-    		    'top': 0,
+    		    'top': 1,
         		'left': 2
 		    },
     		style: {
