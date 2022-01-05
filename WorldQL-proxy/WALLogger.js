@@ -108,7 +108,7 @@ class Logger{
 			command = command.substring(0,command.length-1)
 		}
 		let split = command.split(' ')
-		this._print('$ '.green + command.grey)
+		this._print('$ '.green + command.white)
 		switch (split[0]) {
 			case 'inspect':
 					var inspect = this.inspectMessage(parseInt(split[1]))
