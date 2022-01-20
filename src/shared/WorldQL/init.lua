@@ -55,25 +55,27 @@ function WQL.createNew(URL:string,listenTimer:number|nil,listenGETLimit:number|n
     --#endregion
     --#region local util functions
     local function fireEvent(event:string,args:{[number] : any})
-        local k = getTableKeys(Event_on)
-        local k2 = getTableKeys(Event_once)
-        --print('firing event:',event,'with args:',args)
-        if tableContains(k,event) then
-            for key, value in pairs(Event_on[event]) do
-                value(unpack(args or {}))
+        task.spawn(function()
+            local k = getTableKeys(Event_on)
+            local k2 = getTableKeys(Event_once)
+            --print('firing event:',event,'with args:',args)
+            if tableContains(k,event) then
+                for key, value in pairs(Event_on[event]) do
+                    value(unpack(args or {}))
+                end
             end
-        end
-        if tableContains(k2,event) then
-            for key, value in pairs(Event_once[event]) do
-                value(unpack(args))
+            if tableContains(k2,event) then
+                for key, value in pairs(Event_once[event]) do
+                    value(unpack(args))
+                end
+                Event_once[event] = {}
             end
-            Event_once[event] = {}
-        end
+        end)
     end
     --#endregion
     --#region WorldQL Functions
     function ret.on(event: string,cb)
-        if typeof(cb) ~="function" then error('cb must be a function') end
+        if typeof(cb) ~= "function" then error('cb must be a function') end
         local k = getTableKeys(Event_on)
         if tableContains(k,event) then
             table.insert(Event_on[event],cb)
@@ -94,7 +96,7 @@ function WQL.createNew(URL:string,listenTimer:number|nil,listenGETLimit:number|n
 
     function ret.connect()
         local data = httpService:RequestAsync({ --error here
-            ['Url'] = options.URL .. '/WorldQL/Auth',
+            ['Url'] = options.URL .. '/auth',
             ['Method'] = 'POST'
         })
         local dataT = httpService:JSONDecode(data.Body)
@@ -109,7 +111,7 @@ function WQL.createNew(URL:string,listenTimer:number|nil,listenGETLimit:number|n
                     break
                 end
                 local output = httpService:JSONDecode(httpService:RequestAsync({
-                    ['Url'] = options.URL .. '/WorldQL/Ping',
+                    ['Url'] = options.URL .. '/ping',
                     ['Method'] ='GET',
                     ['Headers'] = {['key'] =  WQLAPIKEY},
                 }).Body)
@@ -118,7 +120,7 @@ function WQL.createNew(URL:string,listenTimer:number|nil,listenGETLimit:number|n
                 end
                 if output.output.messages >= 1 then
                     local messages = httpService:JSONDecode(httpService:RequestAsync({
-                        ['Url'] = options.URL .. '/WorldQL/Message',
+                        ['Url'] = options.URL .. '/message',
                         ['Method'] = 'GET',
                         ['Headers'] = {
                             ['key'] =  WQLAPIKEY,
@@ -149,7 +151,7 @@ function WQL.createNew(URL:string,listenTimer:number|nil,listenGETLimit:number|n
 
     function ret.disconnect()
         local out = httpService:JSONDecode(httpService:RequestAsync({
-            ['Url'] = options.URL .. '/WorldQL/Auth',
+            ['Url'] = options.URL .. '/auth',
             ['Method'] = 'DELETE',
             ['Headers'] = {['key'] = WQLAPIKEY}
         }).Body)
@@ -161,7 +163,7 @@ function WQL.createNew(URL:string,listenTimer:number|nil,listenGETLimit:number|n
     function ret.sendRawMessage(Message:DataTypes.MessageT)
         print('sending message',Message)
         local data = httpService:JSONDecode(httpService:PostAsync(
-            options.URL .. '/WorldQL/Message',
+            options.URL .. '/message',
             httpService:JSONEncode(Message),
             Enum.HttpContentType.ApplicationJson,
             false,
